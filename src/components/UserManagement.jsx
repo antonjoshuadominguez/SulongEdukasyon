@@ -38,7 +38,6 @@ const UserManagement = () => {
         </form>
       </div>
 
-      {/* Overlay Container */}
       <div className="overlay-container">
         <div className="overlay">
           <div className="overlay-panel overlay-left">
