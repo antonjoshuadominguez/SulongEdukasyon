@@ -1,16 +1,16 @@
 import React from 'react';
 import LandingPageContent from "../components/LandingPageContent";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import LandingHeader from "../components/LandingHeader";
+import LandingFooter from "../components/LandingFooter";
 
 const LandingPage = () => {
   return (
     <div id="root">
-      <Header />
+      <LandingHeader />
       <div className="app-container">
         <LandingPageContent />
       </div>
-      <Footer />
+      <LandingFooter />
     </div>
   );
 };

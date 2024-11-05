@@ -1,20 +1,31 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../css/UserManagement.css';
 
 const UserManagement = () => {
   const [rightPanelActive, setRightPanelActive] = useState(false);
+  
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const navigate = useNavigate(); 
+
+  const handleSignIn = (e) => {
+    e.preventDefault();
+    if (email === "test@test.com" && password === "test1234") {
+      navigate('/dashboard'); 
+      setErrorMessage('');
+    } else {
+      setErrorMessage('Invalid email or password.'); 
+    }
+  };
 
   return (
     <div className={`container ${rightPanelActive ? 'right-panel-active' : ''}`} id="container">
       <div className="form-container sign-up-container">
         <form>
           <h1>Create Account</h1>
-          <div className="social-container">
-            <a href="#" className="social"><i className="fab fa-facebook-f"></i></a>
-            <a href="#" className="social"><i className="fab fa-google-plus-g"></i></a>
-            <a href="#" className="social"><i className="fab fa-linkedin-in"></i></a>
-          </div>
-          <span>or use your email for registration</span>
           <input type="text" placeholder="Name" />
           <input type="email" placeholder="Email" />
           <input type="password" placeholder="Password" />
@@ -23,18 +34,23 @@ const UserManagement = () => {
       </div>
 
       <div className="form-container sign-in-container">
-        <form>
+        <form onSubmit={handleSignIn}>
           <h1>Sign in</h1>
-          <div className="social-container">
-            <a href="#" className="social"><i className="fab fa-facebook-f"></i></a>
-            <a href="#" className="social"><i className="fab fa-google-plus-g"></i></a>
-            <a href="#" className="social"><i className="fab fa-linkedin-in"></i></a>
-          </div>
-          <span>or use your account</span>
-          <input type="email" placeholder="Email" />
-          <input type="password" placeholder="Password" />
+          <input 
+            type="email" 
+            placeholder="Email" 
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)} 
+          />
+          <input 
+            type="password" 
+            placeholder="Password" 
+            value={password} 
+            onChange={(e) => setPassword(e.target.value)} 
+          />
+          {errorMessage && <p className="error">{errorMessage}</p>}
           <a href="#">Forgot your password?</a>
-          <button>Sign In</button>
+          <button type="submit">Sign In</button>
         </form>
       </div>
 

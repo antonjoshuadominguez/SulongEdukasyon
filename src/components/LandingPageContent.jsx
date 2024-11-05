@@ -1,13 +1,20 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../css/LandingPageContent.css'; 
 
 const LandingPage = () => {
+  const navigate = useNavigate(); 
+
+  const handleStartLearning = () => {
+    navigate('/user-management'); 
+  };
+
   return (
     <div>
       <div className="hero-section">
         <h1>Welcome to SulongEdukasyon</h1>
         <p>Explore the fun way to learn Filipino and Araling Panlipunan!</p>
-        <button>Start Learning Now</button>
+        <button onClick={handleStartLearning}>Start Learning Now</button>
       </div>
 
       <div className="features-section">
@@ -28,4 +35,4 @@ const LandingPage = () => {
   );
 };
 
-export default LandingPage;
+export default LandingPage; 

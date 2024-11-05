@@ -1,13 +1,19 @@
 import React from 'react';
-// import LandingPage from './pages/landingpage';
-import UserManagement from './components/UserManagement';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import LandingPage from './pages/LandingPage';
+import UserManagementPage from './pages/UserManagementPage';
+import DashboardPage from './pages/DashboardPage';
 
 function App() {
   return (
-    <div>
-      <UserManagement />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/user-management" element={<UserManagementPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+      </Routes>
+    </Router>
   );
 }
 
-export default App
+export default App;
