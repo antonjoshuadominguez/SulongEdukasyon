@@ -10,7 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/user-management" element={<UserManagementPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/CreateRoom" element={<DashboardPage />} />
       </Routes>
     </Router>
   );

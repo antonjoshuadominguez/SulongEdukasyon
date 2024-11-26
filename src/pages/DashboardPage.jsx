@@ -1,5 +1,5 @@
 import React from "react";
-import Dashboard from "../components/Dashboard";
+import JoinRoom from "../components/CreateRoom";
 import Sidebar from "../components/Sidebar";
 import "../css/DashboardPage.css";
 
@@ -8,7 +8,7 @@ const DashboardPage = () => {
     <div className="dashboard-page"> 
       <div className="content-container"> 
         <div className="main-content">
-          <Dashboard />
+          <JoinRoom />
         </div>
       </div>
     </div>

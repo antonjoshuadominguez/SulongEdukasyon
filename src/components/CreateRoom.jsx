@@ -1,14 +1,14 @@
 import React from "react";
-import "../css/Dashboard.css";
+import "../css/CreateRoom.css";
 
-const Dashboard = () => {
+const CreateRoom = () => {
   return (
     <div className="dashboard-container">
       {/* Sidebar */}
       <div className="sidebar">
         <h2>Account</h2>
         <button>Rooms</button>
-      </div>
+      </div>  
 
       {/* Main Content */}
       <div className="main-content">
@@ -17,7 +17,7 @@ const Dashboard = () => {
           <button className="logout">Logout</button>
         </header>
 
-        <h1>Join Room</h1>
+        <h1>Create Room</h1>
         <div className="rooms-list">
           <div className="room-item">
             <span>Room 1: Landforms</span>
@@ -33,4 +33,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default CreateRoom;
