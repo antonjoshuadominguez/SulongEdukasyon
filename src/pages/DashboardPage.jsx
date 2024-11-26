@@ -7,7 +7,6 @@ const DashboardPage = () => {
   return (
     <div className="dashboard-page"> 
       <div className="content-container"> 
-        <Sidebar />
         <div className="main-content">
           <Dashboard />
         </div>
