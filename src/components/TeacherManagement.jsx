@@ -4,9 +4,9 @@ import '../css/TeacherManagement.css';
 const TeacherManagement = () => {
   return (
     <div className="teacher-management">
+      <button className="logout-button">Logout</button>
       <div className="header">
         <h1>Teacher Management</h1>
-        <button className="logout-button">Logout</button>
       </div>
       <div className="content">
         <div className="card-grid">
