@@ -6,7 +6,7 @@ const CreateRoom = () => {
     <div className="dashboard-container">
       {/* Sidebar */}
       <div className="sidebar">
-        <h2>Account</h2>
+        <button className="sidebar-button">Account</button>
         <button className="sidebar-button">Rooms</button>
       </div>  
 
