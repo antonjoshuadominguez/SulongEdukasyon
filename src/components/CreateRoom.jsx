@@ -20,12 +20,6 @@ const CreateRoom = () => {
         <h1 className="page-title">Create Room</h1>
         <div className="rooms-list">
           <div className="room-item">
-            <span>Room 1: Landforms</span>
-            <button className="join-button">Join</button>
-          </div>
-          <div className="room-item">
-            <span>Room 2: Waterforms</span>
-            <button className="join-button">Join</button>
           </div>
         </div>
       </div>
