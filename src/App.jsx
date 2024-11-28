@@ -4,6 +4,7 @@ import LandingPage from './pages/LandingPage';
 import DashboardPage from './pages/DashboardPage';
 import UserManagementPage from './pages/UserManagementPage';
 import TeacherManagementPage from './pages/TeacherManagementPage';
+import CreateRoomPage from './pages/CreateRoomPage';
 
 function App() {
   return (
@@ -12,7 +13,8 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/user-management" element={<UserManagementPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/teacher-management" element={<TeacherManagementPage />} />
+        <Route path="/CreateRoom" element={<CreateRoomPage />} />
       </Routes>
     </Router>
   );

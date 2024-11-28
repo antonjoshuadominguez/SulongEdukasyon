@@ -2,8 +2,8 @@
 
 .dashboard-container {
   display: flex;
-  height: 100vh; /* Full viewport height */
-  width: 95vw;
+  height: 100vh;
+  width: 100vw; /* Full viewport width */
   font-family: 'Montserrat', sans-serif;
 }
 
@@ -16,25 +16,25 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  gap: 1rem;
 }
 
 .sidebar h2 {
-  margin-bottom: 2rem;
   font-size: 1.5rem;
 }
 
-.sidebar button {
+.sidebar-button {
   background-color: #314e61; /* Lighter blue */
   color: white;
   border: none;
   padding: 0.5rem;
   border-radius: 5px;
-  text-align: left;
   cursor: pointer;
   font-size: 1rem;
+  text-align: left;
 }
 
-.sidebar button:hover {
+.sidebar-button:hover {
   background-color: #3c6382;
 }
 
@@ -43,33 +43,24 @@
   flex: 1;
   padding: 2rem;
   background-color: #f9f9f9;
-  position: relative;
   box-sizing: border-box;
-  margin-left: 20%; /* Offset content to avoid sidebar overlap */
 }
 
 /* Header and Logout Button Styling */
-header {
+.header {
   display: flex;
-  justify-content: space-between; /* Align logout to the right */
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
-  position: relative; /* Allow header to sit cleanly without fixed positioning */
 }
 
-header .left-section {
-  display: flex;
-  align-items: center;
-  gap: 1rem; /* Adds space between "Account" and "Teacher" */
-}
-
-header h2 {
+.header h3 {
   font-size: 1.5rem;
-  color: black;
+  color: #333;
 }
 
-header .logout {
-  background-color: #c0392b; /* Red button */
+.logout {
+  background-color: #c0392b; /* Red */
   color: white;
   border: none;
   padding: 0.5rem 1rem;
@@ -78,37 +69,42 @@ header .logout {
   font-size: 0.9rem;
 }
 
-header .logout:hover {
+.logout:hover {
   background-color: #e74c3c;
+}
+
+/* Page Title Styling */
+.page-title {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 /* Room List Styling */
 .rooms-list {
   display: flex;
   flex-direction: column;
-  gap: 1rem; /* Adds space between room items */
+  gap: 1rem;
 }
 
 .room-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #2d7bbf; /* Blue room background */
+  background-color: #2d7bbf; /* Blue */
   color: white;
   padding: 1rem;
   border-radius: 5px;
-  font-size: 1rem;
 }
 
-.room-item button {
-  background-color: #e6f2fc; /* Light blue for Join button */
-  color: #2d7bbf; /* Blue text */
+.join-button {
+  background-color: #e6f2fc; /* Light blue */
+  color: #2d7bbf; /* Blue */
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 5px;
   cursor: pointer;
 }
 
-.room-item button:hover {
+.join-button:hover {
   background-color: #d4e9f7;
 }
