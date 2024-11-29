@@ -8,18 +8,31 @@ const CreateRoom = () => {
       <div className="sidebar">
         <button className="sidebar-button">Account</button>
         <button className="sidebar-button">Rooms</button>
-      </div>  
+      </div>
 
       {/* Main Content */}
       <div className="main-content">
         <header className="header">
-          <h3>Teacher</h3>
+          <div className="teacher">Teacher</div>
           <button className="logout">Logout</button>
         </header>
 
         <h1 className="page-title">Create Room</h1>
-        <div className="rooms-list">
-          <div className="room-item">
+
+        {/* Create Room Form */}
+        <div className="create-room-container">
+          <div className="form-container">
+            <input
+              type="text"
+              className="input-field"
+              placeholder="Room Name"
+            />
+            <textarea
+              className="input-field"
+              placeholder="Room Description"
+              rows="4"
+            ></textarea>
+            <button className="create-button">Create</button>
           </div>
         </div>
       </div>
