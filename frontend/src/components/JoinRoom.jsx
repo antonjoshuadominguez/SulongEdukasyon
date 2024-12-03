@@ -4,13 +4,10 @@ import "../css/JoinRoom.css";
 const JoinRoom = () => {
   return (
     <div className="dashboard-container">
-      {/* Sidebar */}
       <div className="sidebar">
         <button className="sidebar-button">Account</button>
         <button className="sidebar-button">Rooms</button>
       </div>
-
-      {/* Main Content */}
       <div className="main-content">
         <header className="header">
           <div className="student">Student</div>
@@ -19,7 +16,6 @@ const JoinRoom = () => {
 
         <h1 className="page-title">Join Room</h1>
 
-        {/* Create Room Form */}
         <div className="create-room-container">
           <div className="form-container">
             <input

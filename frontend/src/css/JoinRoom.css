@@ -3,15 +3,14 @@
 .dashboard-container {
   display: flex;
   height: 100vh;
-  width: 100vw; /* Full viewport width */
+  width: 100vw; 
   font-family: 'Montserrat', sans-serif;
 }
 
-/* Sidebar Styling */
 .sidebar {
-  background-color: #1c2833; /* Dark blue */
+  background-color: #1c2833; 
   color: white;
-  width: 20%; /* Sidebar width */
+  width: 20%; 
   padding: 1rem;
   box-sizing: border-box;
   display: flex;
@@ -20,7 +19,7 @@
 }
 
 .sidebar-button {
-  background-color: #314e61; /* Lighter blue */
+  background-color: #314e61; 
   color: white;
   border: none;
   padding: 0.5rem;
@@ -34,7 +33,6 @@
   background-color: #3c6382;
 }
 
-/* Main Content Styling */
 .main-content {
   flex: 1;
   padding: 2rem;
@@ -46,47 +44,43 @@
   flex-direction: column;
 }
 
-/* Header and Logout Button Styling */
 .header {
   display: flex;
-  justify-content: space-between; /* Aligns Teacher and Logout to opposite sides */
-  align-items: center; /* Aligns Teacher and Logout in the center vertically */
+  justify-content: space-between; 
+  align-items: center; 
   width: 100%;
-  padding: 0 1rem; /* Adjust horizontal padding */
+  padding: 0 1rem; 
   margin-bottom: 1rem;
 }
 
-/* Teacher styling */
 .student {
   font-size: 1.5rem;
-  font-weight: bold; /* Make the Teacher text bold */
+  font-weight: bold; 
   color: #333;
-  margin-left: 1rem; /* Add a little space between Teacher and Logout */
+  margin-left: 1rem; 
 }
 
 .logout {
-  background-color: #c0392b; /* Red */
+  background-color: #c0392b; 
   color: white;
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 5px;
   cursor: pointer;
   font-size: 0.9rem;
-  margin-left: auto; /* Pushes Logout button to the right */
+  margin-left: auto; 
 }
 
 .logout:hover {
   background-color: #e74c3c;
 }
 
-/* Page Title Styling */
 .page-title {
   font-size: 2rem;
   margin-bottom: 1.5rem;
   text-align: center;
 }
 
-/* Create Room Form Styling */
 .create-room-container {
   width: 100%;
   display: flex;
@@ -94,7 +88,7 @@
 }
 
 .form-container {
-  width: 40%; /* Adjust the width as needed */
+  width: 40%; 
   background-color: #f0f4f8;
   padding: 2rem;
   border-radius: 8px;
@@ -104,7 +98,6 @@
   gap: 1rem;
 }
 
-/* Input Field Styling */
 .input-field {
   padding: 0.8rem;
   font-size: 1rem;
@@ -119,9 +112,8 @@
   outline: none;
 }
 
-/* Create Button Styling */
 .create-button {
-  background-color: #2d7bbf; /* Blue */
+  background-color: #2d7bbf; 
   color: white;
   border: none;
   padding: 0.8rem;

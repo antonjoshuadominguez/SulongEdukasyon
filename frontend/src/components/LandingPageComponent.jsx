@@ -1,12 +1,12 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';  // Import useNavigate for routing
-import '../css/LandingPage.css';  // Import the CSS for styling
+import { useNavigate } from 'react-router-dom'; 
+import '../css/LandingPage.css';  
 
-const LandingPage = () => {
-  const navigate = useNavigate();  // Hook to navigate
+const LandingPageComponent = () => {
+  const navigate = useNavigate(); 
 
   const handleStartLearning = () => {
-    navigate('/user-management');  // Navigate to UserManagement page
+    navigate('/usermanagement');  
   };
 
   return (
@@ -22,14 +22,12 @@ const LandingPage = () => {
       </header>
 
       <main>
-        {/* Welcome Section */}
         <section className="welcome-section">
           <h1>Welcome to SulongEdukasyon</h1>
           <p>Explore the fun way to learn Filipino and Araling Panlipunan!</p>
           <button className="cta-button" onClick={handleStartLearning}>Start Learning Now</button>
         </section>
 
-        {/* Features Section */}
         <section className="features-section">
           <div className="feature-card">
             <h2>Interactive Lessons</h2>
@@ -46,7 +44,6 @@ const LandingPage = () => {
         </section>
       </main>
 
-      {/* Footer Section */}
       <footer className="footer">
         <p>Contact us: capstone.g01.04@gmail.com</p>
         <div className="footer-links">
@@ -60,4 +57,4 @@ const LandingPage = () => {
   );
 };
 
-export default LandingPage;
+export default LandingPageComponent;

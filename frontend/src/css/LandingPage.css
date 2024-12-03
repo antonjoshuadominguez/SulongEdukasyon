@@ -1,26 +1,23 @@
-/* General Styles */
 body, html {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
     background-color: #f8f9fa;
     color: #333;
-    height: 100%; /* Full height of the screen */
-    width: 100%; /* Full width of the screen */
-    overflow: hidden; /* Prevent scrolling */
-    box-sizing: border-box; /* Ensures padding and borders are included in element's total width and height */
+    height: 100%; 
+    width: 100%;
+    overflow: hidden; 
+    box-sizing: border-box; 
 }
 
-/* Landing Page Container */
 .landing-page {
     display: flex;
     flex-direction: column;
-    height: 100vh; /* Full height of the screen */
-    width: 100vw; /* Full width of the screen */
-    justify-content: space-between; /* Distribute space evenly between sections */
+    height: 100vh; 
+    width: 100vw; 
+    justify-content: space-between;
 }
 
-/* Top Bar */
 .top-bar {
     display: flex;
     justify-content: space-between;
@@ -28,7 +25,7 @@ body, html {
     background-color: #007bff;
     color: white;
     padding: 1rem 2rem;
-    width: 100%; /* Full width */
+    width: 100%; 
     box-sizing: border-box;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
@@ -59,20 +56,19 @@ body, html {
     border-radius: 5px;
 }
 
-/* Welcome Section */
 .welcome-section {
     background: linear-gradient(90deg, #6a11cb, #2575fc);
     color: white;
     text-align: center;
     padding: 3rem 1rem;
-    flex-grow: 1; /* Ensures this section expands to fill remaining space */
+    flex-grow: 1; 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 100%; /* Full width */
+    width: 100%; 
     box-sizing: border-box;
-    margin-bottom: 0; /* Remove bottom margin */
+    margin-bottom: 0; 
 }
 
 .welcome-section h1 {
@@ -94,24 +90,23 @@ body, html {
     border-radius: 5px;
     cursor: pointer;
     transition: all 0.3s ease;
-    margin-bottom: 0; /* Ensure no bottom margin */
+    margin-bottom: 0; 
 }
 
 .cta-button:hover {
     background-color: #ff7700;
 }
 
-/* Features Section */
 .features-section {
     display: flex;
     justify-content: center;
     gap: 2rem;
-    padding: 4rem 2rem; /* Increased padding to move the cards lower */
+    padding: 4rem 2rem; 
     background-color: #f8f9fa;
-    margin-top: 2rem; /* Adds space between the welcome section and the feature cards */
+    margin-top: 2rem; 
     width: 100%;
     box-sizing: border-box;
-    margin-bottom: 0; /* Remove bottom margin */
+    margin-bottom: 0; 
 }
 
 .feature-card {
@@ -135,14 +130,13 @@ body, html {
     color: #555;
 }
 
-/* Footer */
 .footer {
     background-color: #343a40;
     color: white;
     text-align: center;
     padding: 1rem 1rem;
     font-size: 0.9rem;
-    width: 100%; /* Full width */
+    width: 100%; 
     box-sizing: border-box;
 }
 .footer-links {
