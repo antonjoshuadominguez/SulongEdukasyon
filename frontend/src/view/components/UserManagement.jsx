@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { handleSignIn, handleSignUp } from '../../controller/userManagementController'; // Importing from the controller
 import '../css/UserManagement.css';
 
 const UserManagement = () => {
@@ -12,70 +13,20 @@ const UserManagement = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  const apiUrl = import.meta.env.VITE_BACKEND_URL;
-
-  const handleSignIn = (e) => {
-    e.preventDefault();
-
-    fetch(`${apiUrl}/users/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Invalid email or password');
-        }
-        return response.json();
-      })
-      .then(userData => {
-        navigate('/dashboard');
-        setErrorMessage('');
-      })
-      .catch(error => {
-        setErrorMessage(error.message);
-      });
+  const handleSubmitSignIn = (e) => {
+    const formData = { email, password };
+    handleSignIn(e, formData, setErrorMessage, navigate);
   };
 
-  const handleSignUp = (e) => {
-    e.preventDefault();
-    if (!email || !password || !role || !firstName || !lastName) {
-      setErrorMessage('All fields are required.');
-      return;
-    }
-
-    const newUser = {
-      email: email,
-      password: password,
-      firstname: firstName,
-      lastname: lastName,
-      role: role,
-    };
-
-    fetch(`${apiUrl}/users/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newUser),
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Failed to create account');
-        }
-        return response.json();
-      })
-      .then(userData => {
-        alert(`Account created successfully as ${role}`);
-        setErrorMessage('');
-      })
-      .catch(error => {
-        setErrorMessage(error.message);
-      });
+  const handleSubmitSignUp = (e) => {
+    const formData = { firstName, lastName, email, password, role };
+    handleSignUp(e, formData, setErrorMessage);
   };
 
   return (
     <div className={`container ${rightPanelActive ? 'right-panel-active' : ''}`} id="container">
       <div className="form-container sign-up-container">
-        <form onSubmit={handleSignUp}>
+        <form onSubmit={handleSubmitSignUp}>
           <h1>Create Account</h1>
           <input 
             type="text" 
@@ -120,7 +71,7 @@ const UserManagement = () => {
       </div>
 
       <div className="form-container sign-in-container">
-        <form onSubmit={handleSignIn}>
+        <form onSubmit={handleSubmitSignIn}>
           <h1>Sign in</h1>
           <input 
             type="email" 

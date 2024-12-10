@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { handleForgotPassword } from '../../controller/userManagementController';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -7,43 +8,13 @@ const ForgotPassword = () => {
   const [feedbackMessage, setFeedbackMessage] = useState('');
   const navigate = useNavigate();
 
-  const handleForgotPassword = async (email) => {
-    try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/users/forget-password`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-
-      if (response.ok) {
-        const data = await response.text(); 
-        setFeedbackMessage('OTP sent to your email.');
-        return true;
-      } else {
-        const errorData = await response.text(); 
-        setFeedbackMessage(errorData || 'Error while sending OTP.');
-        return false;
-      }
-    } catch (error) {
-      setFeedbackMessage('A network error occurred. Please try again.');
-      return false;
-    }
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmitForgotPassword = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-
-    const success = await handleForgotPassword(email);
-    if (success) {
-      const forgotPasswordData = {
-        email,
-        otp: '',
-        newPassword: '',
-      };
-      navigate('/otp', { state: { forgotPasswordData } });
+    const result = await handleForgotPassword(email, setFeedbackMessage);
+    if (result) {
+      navigate('/reset-password');
     }
-
     setIsSubmitting(false);
   };
 
@@ -56,7 +27,7 @@ const ForgotPassword = () => {
             <p className="text-sm text-gray-600">{feedbackMessage}</p>
           </div>
         )}
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmitForgotPassword}>
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address</label>
             <input
@@ -71,9 +42,7 @@ const ForgotPassword = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full py-2 px-4 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-500 ${
-              isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600'
-            }`}
+            className={`w-full py-2 px-4 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-500 ${isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600'}`}
             style={{ backgroundColor: isSubmitting ? '#ccc' : '#001529' }}
           >
             {isSubmitting ? 'Submitting...' : 'Submit'}

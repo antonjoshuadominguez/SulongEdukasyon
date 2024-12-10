@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import CreateRoomPage from './pages/CreateRoomPage'; 
-import JoinRoomPage from './pages/JoinRoomPage';
-import LandingPage from './pages/LandingPage';
-import UserManagementPage from './pages/UserManagementPage';
-import DashboardPage from './pages/DashboardPage';
-import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import CreateRoomPage from './view/pages/CreateRoomPage'; 
+import JoinRoomPage from './view/pages/JoinRoomPage';
+import LandingPage from './view/pages/LandingPage';
+import UserManagementPage from './view/pages/UserManagementPage';
+import DashboardPage from './view/pages/DashboardPage';
+import ForgotPasswordPage from './view/pages/ForgotPasswordPage';
 
 function App() {
   return (
