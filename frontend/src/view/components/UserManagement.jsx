@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { handleSignIn, handleSignUp } from '../../controller/userManagementController'; // Importing from the controller
+import { handleSignIn, handleSignUp } from '../../controller/userManagementController'; 
 import '../css/UserManagement.css';
 
 const UserManagement = () => {
