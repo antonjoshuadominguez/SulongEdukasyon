@@ -1,13 +1,11 @@
 import React from "react";
 import "../css/JoinRoom.css";
+import Sidebar from "../components/Sidebar"; // Import Sidebar component
 
 const JoinRoom = () => {
   return (
-    <div className="dashboard-container">
-      <div className="sidebar">
-        <button className="sidebar-button">Account</button>
-        <button className="sidebar-button">Rooms</button>
-      </div>
+    <div className="joinroom-page">
+      <Sidebar /> {/* Sidebar on the left */}
       <div className="main-content">
         <header className="header">
           <div className="student">Student</div>

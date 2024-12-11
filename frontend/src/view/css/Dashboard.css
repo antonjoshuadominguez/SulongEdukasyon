@@ -13,9 +13,13 @@ body {
 
 .dashboard-container {
   display: flex;
-  width: 100%;
+  width: calc(100% - 220px); /* Adjusted for new sidebar width */
+  margin-left: 220px;
   height: 100vh;
   background-color: #f6f5f7;
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+  padding: 20px;
 }
 
 .header, .main-content {
@@ -35,17 +39,18 @@ body {
 }
 
 .main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  overflow-y: auto;
+  max-width: 800px; /* Limit content width for better readability */
+  padding: 40px; /* Add padding for more comfortable spacing */
+  background: #FFFFFF;
+  border-radius: 8px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .content-container {
   display: flex;
-  flex: 1;
+  height: 100%; /* Full height */
   overflow: hidden;
+  margin-left: 275px; /* Offset the content to the right of the sidebar */
 }
 
 .menu-icon i {
@@ -98,7 +103,14 @@ body {
 }
 
 main {
-  padding: 20px;
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+  color: #2C3E50;
+  background: #FFFFFF;
+  padding: 20px 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .dashboard-page {

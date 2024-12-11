@@ -1,25 +1,50 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
 
-.dashboard-container {
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%; /* Ensure full height for body */
+  width: 100%;  /* Ensure full width for body */
+}
+
+.joinroom-page {
   display: flex;
-  height: 100vh;
-  width: 100vw; 
-  font-family: 'Montserrat', sans-serif;
+  height: 100%; /* Ensure the page takes the full height */
+}
+
+.content-container {
+  display: flex;
+  width: 100%;
 }
 
 .sidebar {
-  background-color: #1c2833; 
+  background-color: #2c3e50; /* Sidebar color */
   color: white;
-  width: 20%; 
+  width: 220px; /* Sidebar width */
+  height: 100%; /* Make sure the sidebar covers the full height */
   padding: 1rem;
   box-sizing: border-box;
+  position: fixed; /* Fix sidebar position */
+  top: 0;
+  left: 0; /* Align to the left */
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  z-index: 1; /* Ensure the sidebar is above other content */
+}
+
+.sidebar h2 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 30px;
 }
 
 .sidebar-button {
-  background-color: #314e61; 
+  background-color: #314e61;
   color: white;
   border: none;
   padding: 0.5rem;
@@ -34,7 +59,8 @@
 }
 
 .main-content {
-  flex: 1;
+  margin-left: 220px; /* Ensure content is not under the sidebar */
+  flex: 1; /* Let the main content take up the rest of the space */
   padding: 2rem;
   background-color: #f9f9f9;
   box-sizing: border-box;
@@ -42,6 +68,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  overflow: auto; /* Handle overflow if needed */
 }
 
 .header {
