@@ -56,7 +56,7 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<String> deleteUser(@RequestParam(required = true) long userId) {
+    public ResponseEntity<String> deleteUser(@RequestParam(required = true) Long userId) {
         return userService.deleteUser(userId);
     }
 }
