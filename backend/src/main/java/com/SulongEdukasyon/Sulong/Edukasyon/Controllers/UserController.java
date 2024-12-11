@@ -20,16 +20,6 @@ public class UserController {
         return userService.register(newUser);
     }
 
-    @PostMapping("/forget-password")
-    public ResponseEntity<String> forgetPassword(@RequestBody String email) {
-        return userService.forgetPassword(email);
-    }
-
-    @PatchMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordDto reset) {
-        return userService.resetPassword(reset.getEmail(), reset.getOtp(), reset.getNewPassword());
-    }
-
     @PutMapping("/update-user")
     public ResponseEntity<?> updateUser(@RequestBody UpdateUserDto updatedInfo) {
         return userService.updateUser(updatedInfo);
