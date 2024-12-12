@@ -4,15 +4,8 @@ import "../css/CreateRoom.css";
 const CreateRoom = () => {
   return (
     <div className="dashboard-container">
-      <div className="sidebar">
-        <button className="sidebar-button">Account</button>
-        <button className="sidebar-button">Rooms</button>
-      </div>
-
       <div className="main-content">
         <header className="header">
-          <div className="teacher">Teacher</div>
-          <button className="logout">Logout</button>
         </header>
 
         <h1 className="page-title">Create Room</h1>
