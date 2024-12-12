@@ -19,7 +19,7 @@ public class UserService {
     private String otp;
 
     public ResponseEntity<?> register(RegisterUserDto newUser) {
-        UserEntity newUserEntity = new UserEntity(newUser.getFirstname(), newUser.getLastname(), newUser.getEmail(), newUser.getPassword());
+        UserEntity newUserEntity = new UserEntity(newUser.getFirstname(), newUser.getLastname(), newUser.getEmail(), newUser.getPassword(), newUser.getRole());
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         newUserEntity.setPassword(encoder.encode(newUserEntity.getPassword()));
         if (userRepo.findByEmail(newUserEntity.getEmail()) != null) {

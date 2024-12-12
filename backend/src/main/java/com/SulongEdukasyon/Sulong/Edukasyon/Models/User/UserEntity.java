@@ -19,11 +19,13 @@ public class UserEntity {
     private String email;
     @JsonIgnore
     private String password;
+    private String role; 
 
-    public UserEntity(String firstname, String lastname, String email, String password) {
+    public UserEntity(String firstname, String lastname, String email, String password, String role) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.password = password;
+        this.role = role;  
     }
 }
