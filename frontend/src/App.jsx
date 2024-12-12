@@ -8,6 +8,7 @@ import DashboardPage from './view/pages/DashboardPage';
 import ForgotPasswordPage from './view/pages/ForgotPasswordPage';
 import TeacherManagementPage from './view/pages/TeacherManagementPage';
 import ClassesPage from './view/pages/ClassesPage';
+import TranslatorPage from './view/pages/TranslatorPage'; // Import TranslatorPage
 
 function App() {
   return (
@@ -16,11 +17,12 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/usermanagement" element={<UserManagementPage />} />
         <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
-        <Route path="/Dashboard" element={<DashboardPage />} /> {/* Dashboard route */}
-        <Route path="/createroom" element={<CreateRoomPage />} /> 
+        <Route path="/dashboard" element={<DashboardPage />} /> {/* Dashboard route */}
+        <Route path="/createroom" element={<CreateRoomPage />} />
         <Route path="/joinroom" element={<JoinRoomPage />} />
-        <Route path="/teachermanagement" element={<TeacherManagementPage/>} />
-        <Route path="/classes" element={<ClassesPage/>} />
+        <Route path="/teachermanagement" element={<TeacherManagementPage />} />
+        <Route path="/classes" element={<ClassesPage />} />
+        <Route path="/translator" element={<TranslatorPage />} /> {/* Translator route */}
       </Routes>
     </Router>
   );

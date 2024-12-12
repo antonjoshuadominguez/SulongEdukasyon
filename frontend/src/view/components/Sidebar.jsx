@@ -35,9 +35,9 @@ const Sidebar = () => {
             </a>
           </li>
           <li>
-            <a href="#messages">
-              <img src={messagesLogo} alt="Messages" />
-              Messages
+            <a href="/translator">
+              <img src={messagesLogo} alt="Translator" />
+              Translator
             </a>
           </li>
         </ul>
