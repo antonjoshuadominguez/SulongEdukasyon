@@ -1,120 +1,62 @@
-@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: 'Montserrat', sans-serif;
-  background: #f6f5f7;
-}
-
-.dashboard-container {
+.dashboard-page {
   display: flex;
-  width: calc(100% - 220px); /* Adjusted for new sidebar width */
-  margin-left: 220px;
-  height: 100vh;
+  margin-left: 365px; /* Space for the 365px wide sidebar */
   background-color: #f6f5f7;
-  justify-content: center; /* Center content horizontally */
-  align-items: center; /* Center content vertically */
+  height: 100vh;
+  width: 90vw; /* Adjusted width of the dashboard content area */
+  overflow: hidden;
+}
+
+.dashboard-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Vertically center content */
+  align-items: center; /* Horizontally center content */
+  background-color: #f6f5f7;
   padding: 20px;
 }
 
-.header, .main-content {
-  background-color: #FFFFFF;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  height: 60px;
-  border-bottom: 1px solid #ddd;
-  width: 100%;
-  color: #9f9e9e;
-  z-index: 1;
-}
-
-.main-content {
-  max-width: 800px; /* Limit content width for better readability */
-  padding: 40px; /* Add padding for more comfortable spacing */
-  background: #FFFFFF;
-  border-radius: 8px;
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.content-container {
-  display: flex;
-  height: 100%; /* Full height */
-  overflow: hidden;
-  margin-left: 275px; /* Offset the content to the right of the sidebar */
-}
-
-.menu-icon i {
-  font-size: 24px;
-  color: #2C3E50;
-}
-
-.account-dropdown {
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-
-.profile-pic {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  margin-right: 5px;
-}
-
-.dropdown-toggle {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #2C3E50;
-}
-
-.dropdown-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background-color: #FFFFFF;
-  border: 1px solid #ddd;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  width: 150px;
-}
-
-.dropdown-menu a {
-  color: #2C3E50;
-  text-decoration: none;
-  padding: 8px;
-  transition: background 0.3s;
-}
-
-.dropdown-menu a:hover {
-  background-color: #f1f1f1;
-}
-
-main {
-  font-size: 20px;
-  font-weight: 600;
+.dashboard-header {
+  background-color: #007bff;
+  color: white;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   text-align: center;
-  color: #2C3E50;
-  background: #FFFFFF;
-  padding: 20px 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
 }
 
-.dashboard-page {
+.dashboard-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.dashboard-main {
   display: flex;
-  flex-direction: column;
-  height: 100%;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 2rem;
+}
+
+.dashboard-section {
+  background-color: white;
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 1000px; /* Increased max-width for larger content */
+  width: 100%;
+}
+
+.dashboard-section h2 {
+  font-size: 1.5rem;
+  color: #007bff;
+  margin-bottom: 1rem;
+}
+
+.dashboard-section p {
+  font-size: 1rem;
+  color: #555;
 }

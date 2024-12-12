@@ -2,7 +2,7 @@ import React from "react";
 import JoinRoom from "../components/JoinRoom";
 import Sidebar from "../components/Sidebar";
 
-const CreateRoomPage = () => {
+const JoinRoomPage = () => {
     return (
         <div className="joinroom-page"> 
       <div className="content-container"> 
@@ -15,4 +15,4 @@ const CreateRoomPage = () => {
     );
 }
 
-export default CreateRoomPage;
+export default JoinRoomPage;
