@@ -29,7 +29,7 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
-            <a href="/joinroom">
+            <a href="/createroom">
               <img src={calendarLogo} alt="Rooms" />
               Rooms
             </a>
