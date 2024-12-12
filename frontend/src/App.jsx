@@ -6,6 +6,7 @@ import LandingPage from './view/pages/LandingPage';
 import UserManagementPage from './view/pages/UserManagementPage';
 import DashboardPage from './view/pages/DashboardPage';
 import ForgotPasswordPage from './view/pages/ForgotPasswordPage';
+import TeacherManagementPage from './view/pages/TeacherManagementPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/Dashboard" element={<DashboardPage />} />
         <Route path="/createroom" element={<CreateRoomPage />} /> 
         <Route path="/joinroom" element={<JoinRoomPage />} />
+        <Route path="/teachermanagement" element={<TeacherManagementPage/>} />
       </Routes>
     </Router>
   );
