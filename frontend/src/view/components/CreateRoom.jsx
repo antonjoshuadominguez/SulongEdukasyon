@@ -77,14 +77,14 @@ const CreateRoom = () => {
               <p className="error-message">{errors.roomName}</p>
             )}
 
-            <textarea
+              <input
+              type="text"
               className={`input-field ${errors.roomDescription ? 'error' : ''}`}
               placeholder="Room Description"
-              rows="4"
               value={roomDescription}
               onChange={(e) => setRoomDescription(e.target.value)}
               maxLength={200}
-            ></textarea>
+           />
             {errors.roomDescription && (
               <p className="error-message">{errors.roomDescription}</p>
             )}
