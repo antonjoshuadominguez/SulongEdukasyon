@@ -21,11 +21,11 @@ const JoinRoom = () => {
               className="input-field"
               placeholder="Room Name"
             />
-            <textarea
+              <input
+              type="text"
               className="input-field"
-              placeholder="Room Description"
-              rows="4"
-            ></textarea>
+              placeholder="Room Code"
+            />
             <button className="create-button">Join</button>
           </div>
         </div>

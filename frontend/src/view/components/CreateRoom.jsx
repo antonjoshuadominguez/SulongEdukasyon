@@ -22,6 +22,11 @@ const CreateRoom = () => {
               placeholder="Room Description"
               rows="4"
             ></textarea>
+            <input
+              type="text"
+              className="input-field"
+              placeholder="Room Code"
+            />
             <button className="create-button">Create</button>
           </div>
         </div>
