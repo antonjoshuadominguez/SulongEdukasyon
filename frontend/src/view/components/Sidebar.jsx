@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom'; // Import Link for routing
 import '../css/Sidebar.css';
 import calendarLogo from '/calendarlogo.png';
 import classesLogo from '/classeslogo.png';
@@ -16,10 +17,10 @@ const Sidebar = () => {
       <nav>
         <ul>
           <li>
-            <a href="#Home">
+            <Link to="/Dashboard"> {/* Changed to Link component */}
               <img src={homeLogo} alt="Home" />
               Dashboard
-            </a>
+            </Link>
           </li>
           <li>
             <a href="#rooms">

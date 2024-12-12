@@ -14,7 +14,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/usermanagement" element={<UserManagementPage />} />
         <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
-        <Route path="/Dashboard" element={<DashboardPage />} />
+        <Route path="/Dashboard" element={<DashboardPage />} /> {/* Dashboard route */}
         <Route path="/createroom" element={<CreateRoomPage />} /> 
         <Route path="/joinroom" element={<JoinRoomPage />} />
       </Routes>
