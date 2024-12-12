@@ -14,6 +14,9 @@ import com.SulongEdukasyon.Sulong.Edukasyon.Models.User.UserRepo;
 public class UserService {
     @Autowired
     public UserRepo userRepo;
+    @Autowired
+    public EmailService emailService;
+    private String otp;
 
     public ResponseEntity<?> register(RegisterUserDto newUser) {
         UserEntity newUserEntity = new UserEntity(newUser.getFirstname(), newUser.getLastname(), newUser.getEmail(), newUser.getPassword());
@@ -47,6 +50,30 @@ public class UserService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid password. Please try again.");
         }
         return ResponseEntity.ok(userRepo.findById(user.getUserId()).get());
+    }
+
+    public ResponseEntity<String> forgetPassword(String email) {
+        this.otp = generateOTP();
+        UserEntity user = userRepo.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid email. No account is associated with this email");
+        }
+        emailService.sendSimpleMail(email, "Forget Password OTP", "Please use this OTP to reset password: " + otp);
+        return ResponseEntity.ok("OTP successfully sent. Please check your email.");
+    }
+
+    public ResponseEntity<String> resetPassword(String email, String otp, String newPassword) {
+        if (this.otp == null || !this.otp.equals(otp)) {
+            return ResponseEntity.status(HttpStatus.GONE).body("Invalid OTP. Please send another request to forget password");
+        }
+        UserEntity user = userRepo.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid email. No account is associated with this email");
+        }
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        user.setPassword(encoder.encode(newPassword));
+        userRepo.save(user);
+        return ResponseEntity.ok("Successfully changed password.");
     }
 
     public ResponseEntity<?> updateUser(UpdateUserDto updatedInfo) {
@@ -87,5 +114,9 @@ public class UserService {
         UserEntity user = userRepo.findById(userId).get();
         userRepo.delete(user);
         return ResponseEntity.ok("Successfully deleted: " + user.getEmail());
+    }
+
+    private String generateOTP() {
+        return String.valueOf((int) (Math.random() * 10000));
     }
 }
