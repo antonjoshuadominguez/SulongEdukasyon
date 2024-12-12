@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom'; // Import Link for routing
 import '../css/Sidebar.css';
 import calendarLogo from '/calendarlogo.png';
-import classesLogo from '/classeslogo.png';
+import classesLogo from '/classeslogo.png'; // Assuming classes logo exists
 import homeLogo from '/homelogo.png';
 import messagesLogo from '/messageslogo.png';
 import sulongEdukasyonLogo from '/sulongedukasyonlogo.png';
@@ -23,15 +23,15 @@ const Sidebar = () => {
             </Link>
           </li>
           <li>
+            <Link to="/classes"> {/* Link to the classes page */}
+              <img src={classesLogo} alt="Classes" />
+              Classes
+            </Link>
+          </li>
+          <li>
             <a href="#rooms">
               <img src={calendarLogo} alt="Rooms" />
               Rooms
-            </a>
-          </li>
-          <li>
-            <a href="#classes">
-              <img src={classesLogo} alt="Classes" />
-              Classes
             </a>
           </li>
           <li>

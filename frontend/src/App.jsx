@@ -7,6 +7,7 @@ import UserManagementPage from './view/pages/UserManagementPage';
 import DashboardPage from './view/pages/DashboardPage';
 import ForgotPasswordPage from './view/pages/ForgotPasswordPage';
 import TeacherManagementPage from './view/pages/TeacherManagementPage';
+import ClassesPage from './view/pages/ClassesPage';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/createroom" element={<CreateRoomPage />} /> 
         <Route path="/joinroom" element={<JoinRoomPage />} />
         <Route path="/teachermanagement" element={<TeacherManagementPage/>} />
+        <Route path="/classes" element={<ClassesPage/>} />
       </Routes>
     </Router>
   );
