@@ -1,35 +1,113 @@
-import React from "react";
+import React, { useState } from "react";
+import { Container } from "@mui/material";
 import "../css/JoinRoom.css";
-import Sidebar from "../components/Sidebar"; // Import Sidebar component
 
 const JoinRoom = () => {
+  const [roomName, setRoomName] = useState("");
+  const [roomDescription, setRoomDescription] = useState("");
+  const [roomCode, setRoomCode] = useState("");
+  const [errors, setErrors] = useState({});
+
+  const generateRandomCode = () => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let code = '';
+    for (let i = 0; i < 6; i++) {
+      code += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    setRoomCode(code);
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!roomName.trim()) {
+      newErrors.roomName = "Room name is required";
+    }
+
+    if (roomName.length > 50) {
+      newErrors.roomName = "Room name must be 50 characters or less";
+    }
+
+    if (!roomDescription.trim()) {
+      newErrors.roomDescription = "Room description is required";
+    }
+
+    if (roomDescription.length > 200) {
+      newErrors.roomDescription = "Description must be 200 characters or less";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleCreateRoom = () => {
+    if (validateForm()) {
+      console.log("Room Creation Details:", {
+        roomName,
+        roomDescription,
+        roomCode
+      });
+      alert("Room Created Successfully!");
+    }
+  };
+
   return (
-    <div className="joinroom-page">
-      <Sidebar /> {/* Sidebar on the left */}
-      <div className="main-content">
-        <header className="header">
-          <div className="student">Student</div>
-          <button className="logout">Logout</button>
-        </header>
-
-        <h1 className="page-title">Join Room</h1>
-
-        <div className="create-room-container">
-          <div className="form-container">
-            <input
+    <div className="dashboard-container">
+      <Container 
+        fixed 
+        maxWidth="xs"
+        sx={{
+          width: '100%',
+          padding: '0 !important',
+          marginTop: '20px' // Moved closer to the top
+        }}
+      > 
+          <h1 className="page-title">Join Room</h1>
+        <div className="join-room-container">
+          <div>
+            <input  
               type="text"
-              className="input-field"
+              className={`input-field ${errors.roomName ? 'error' : ''}`}
               placeholder="Room Name"
+              value={roomName}
+              onChange={(e) => setRoomName(e.target.value)}
+              maxLength={50}
             />
+            {errors.roomName && (
+              <p className="error-message">{errors.roomName}</p>
+            )}
+
               <input
               type="text"
-              className="input-field"
-              placeholder="Room Code"
-            />
-            <button className="create-button">Join</button>
+              className={`input-field ${errors.roomDescription ? 'error' : ''}`}
+              placeholder="Room Description"
+              value={roomDescription}
+              onChange={(e) => setRoomDescription(e.target.value)}
+              maxLength={200}
+           />
+            {errors.roomDescription && (
+              <p className="error-message">{errors.roomDescription}</p>
+            )}
+
+            <div className="room-code-container">
+              <input
+                type="text"
+                className="input-field room-code"
+                placeholder="Room Code"
+                value={roomCode}
+                onChange={(e) => setRoomCode(e.target.value)}
+                readOnly
+              />
+              <button 
+                className="join-button" 
+                onClick={handleCreateRoom}
+              >
+                Join
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </Container>
     </div>
   );
 };
