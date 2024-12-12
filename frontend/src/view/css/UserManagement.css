@@ -221,3 +221,32 @@ select {
   border-radius: 5px;
   font-size: 16px;
 }
+
+.loader {
+  width: 100px;
+  height: 10px;
+  background-color: #3498db;
+  position: relative;
+  margin-top: 10px;
+  animation: loadingBar 2s infinite;
+}
+
+@keyframes loadingBar {
+  0% { width: 0; }
+  50% { width: 50%; }
+  100% { width: 100%; }
+}
+
+.success {
+  color: green;
+  font-size: 1rem;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.error {
+  color: red;
+  font-size: 1rem;
+  margin-top: 10px;
+  text-align: center;
+}

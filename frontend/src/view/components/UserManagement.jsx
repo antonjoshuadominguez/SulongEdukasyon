@@ -11,16 +11,28 @@ const UserManagement = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);  
+  const [isSuccess, setIsSuccess] = useState(false);  
   const navigate = useNavigate();
 
   const handleSubmitSignIn = (e) => {
+    e.preventDefault();
+    setIsLoading(true);
     const formData = { email, password };
-    handleSignIn(e, formData, setErrorMessage, navigate);
+    handleSignIn(e, formData, setErrorMessage, navigate)
+      .finally(() => setIsLoading(false)); 
   };
 
   const handleSubmitSignUp = (e) => {
+    e.preventDefault();
+    setIsLoading(true); 
     const formData = { firstName, lastName, email, password, role };
-    handleSignUp(e, formData, setErrorMessage);
+    handleSignUp(e, formData, setErrorMessage)
+      .then(() => {
+        setIsSuccess(true); 
+        setIsLoading(false);
+      })
+      .catch(() => setIsLoading(false)); 
   };
 
   return (
@@ -66,7 +78,9 @@ const UserManagement = () => {
             <option value="teacher">Teacher</option>
           </select>
           {errorMessage && <p className="error">{errorMessage}</p>}
-          <button type="submit">Sign Up</button>
+          <button type="submit" disabled={isLoading}>Sign Up</button>
+          {isLoading && <div className="loader">Loading...</div>}  {/* Show loader while loading */}
+          {isSuccess && !isLoading && <p className="success">Registration successful!</p>} {/* Success message */}
         </form>
       </div>
 
@@ -89,7 +103,8 @@ const UserManagement = () => {
           />
           {errorMessage && <p className="error">{errorMessage}</p>}
           <a href="#" onClick={() => navigate('/ForgotPassword')}>Forgot your password?</a>
-          <button type="submit">Sign In</button>
+          <button type="submit" disabled={isLoading}>Sign In</button>
+          {isLoading && <div className="loader">Loading...</div>}  {/* Show loader while loading */}
         </form>
       </div>
 
