@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChangePasswordDto {
+public class ResetPasswordDto {
     private String email;
-    private String oldPassword;
+    private String otp;
     private String newPassword;
 }
