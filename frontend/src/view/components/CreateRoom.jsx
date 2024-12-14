@@ -84,9 +84,11 @@ const CreateRoom = () => {
   return (
     <div className="dashboard-container">
       <Container fixed maxWidth="xs" sx={{ marginTop: "20px" }}>
+        {/* Page Title */}
         <h1 className="page-title" style={{ textAlign: "center", color: "#333" }}>
-          {editingIndex !== null ? "Edit Room" : "Create Room"}
+          Create Room
         </h1>
+
         <div className="create-room-container">
           {/* Input Fields */}
           <input
