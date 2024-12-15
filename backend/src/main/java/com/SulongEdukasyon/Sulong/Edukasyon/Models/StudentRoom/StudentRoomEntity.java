@@ -13,13 +13,17 @@ import lombok.*;
 @Setter
 public class StudentRoomEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
+    private Long studentRoomId;
+
     @ManyToOne
-    @JoinColumn(name = "room_id", nullable = false)
+    @JoinColumn(name = "room_id", nullable = false)  
     private RoomEntity room;
 
     @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false)
+    @JoinColumn(name = "student_id", nullable = false)  
     private StudentEntity student;
 
-    private String enrollmentDate;  
+    private String enrollmentDate;
 }
