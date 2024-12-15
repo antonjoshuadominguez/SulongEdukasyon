@@ -1,18 +1,12 @@
 import React from "react";
-import CreateRoom from "../components/CreateRoom";
-import Sidebar from "../components/Sidebar";
+import CreateRoom from "../components/CreateRoom";  
 
 const CreateRoomPage = () => {
-    return (
-        <div className="createroom-page"> 
-      <div className="content-container"> 
-        <Sidebar />
-        <div className="main-content">
-          <CreateRoom />
-        </div>
-      </div>
+  return (
+    <div>
+      <CreateRoom />
     </div>
-    );
-}
+  );
+};
 
 export default CreateRoomPage;

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Container } from "@mui/material";
+import Sidebar from "../components/Sidebar"; // Ensure this import is correct
 import "../css/createroom.css"; // Import your updated CSS file
 
 const CreateRoom = () => {
@@ -10,7 +11,6 @@ const CreateRoom = () => {
   const [rooms, setRooms] = useState([]); // List of created rooms
   const [editingIndex, setEditingIndex] = useState(null); // Track which room is being edited
 
-  // Validate the form inputs
   const validateForm = () => {
     const newErrors = {};
 
@@ -36,20 +36,17 @@ const CreateRoom = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle form submission (Create or Edit)
   const handleCreateRoom = () => {
     if (validateForm()) {
       if (editingIndex !== null) {
-        // Edit existing room
         const updatedRooms = rooms.map((room, index) =>
           index === editingIndex
             ? { name: roomName, description: roomDescription, code: roomCode }
             : room
         );
         setRooms(updatedRooms);
-        setEditingIndex(null); // Exit edit mode
+        setEditingIndex(null);
       } else {
-        // Add a new room
         const newRoom = {
           name: roomName,
           description: roomDescription,
@@ -58,7 +55,6 @@ const CreateRoom = () => {
         setRooms([...rooms, newRoom]);
       }
 
-      // Reset input fields
       setRoomName("");
       setRoomDescription("");
       setRoomCode("");
@@ -66,88 +62,84 @@ const CreateRoom = () => {
     }
   };
 
-  // Handle editing a room
   const handleEditRoom = (index) => {
     const roomToEdit = rooms[index];
     setRoomName(roomToEdit.name);
     setRoomDescription(roomToEdit.description);
     setRoomCode(roomToEdit.code);
-    setEditingIndex(index); // Set current editing index
+    setEditingIndex(index);
   };
 
-  // Handle deleting a room
   const handleDeleteRoom = (index) => {
     const updatedRooms = rooms.filter((_, i) => i !== index);
     setRooms(updatedRooms);
   };
 
   return (
-    <div className="dashboard-container">
-      <Container fixed maxWidth="xs" sx={{ marginTop: "20px" }}>
-        {/* Page Title */}
-        <h1 className="page-title" style={{ textAlign: "center", color: "#333" }}>
-          Create Room
-        </h1>
+    <div className="classes-page">
+      <Sidebar />
+      <div className="dashboard-container">
+        <Container fixed maxWidth="xs" sx={{ marginTop: "50px" }}>
+          <h1 className="page-title" style={{ textAlign: "center", color: "#333" }}>
+            {editingIndex !== null ? "Edit Room" : "Create Room"}
+          </h1>
+          <div className="create-room-container">
+            <input
+              type="text"
+              className={`input-field ${errors.roomName ? "error" : ""}`}
+              placeholder="Room Name"
+              value={roomName}
+              onChange={(e) => setRoomName(e.target.value)}
+              maxLength={50}
+            />
+            {errors.roomName && <p className="error-message">{errors.roomName}</p>}
 
-        <div className="create-room-container">
-          {/* Input Fields */}
-          <input
-            type="text"
-            className={`input-field ${errors.roomName ? "error" : ""}`}
-            placeholder="Room Name"
-            value={roomName}
-            onChange={(e) => setRoomName(e.target.value)}
-            maxLength={50}
-          />
-          {errors.roomName && <p className="error-message">{errors.roomName}</p>}
+            <input
+              type="text"
+              className={`input-field ${errors.roomDescription ? "error" : ""}`}
+              placeholder="Room Description"
+              value={roomDescription}
+              onChange={(e) => setRoomDescription(e.target.value)}
+              maxLength={200}
+            />
+            {errors.roomDescription && (
+              <p className="error-message">{errors.roomDescription}</p>
+            )}
 
-          <input
-            type="text"
-            className={`input-field ${errors.roomDescription ? "error" : ""}`}
-            placeholder="Room Description"
-            value={roomDescription}
-            onChange={(e) => setRoomDescription(e.target.value)}
-            maxLength={200}
-          />
-          {errors.roomDescription && (
-            <p className="error-message">{errors.roomDescription}</p>
-          )}
+            <input
+              type="text"
+              className={`input-field ${errors.roomCode ? "error" : ""}`}
+              placeholder="Room Code (6 characters)"
+              value={roomCode}
+              onChange={(e) => setRoomCode(e.target.value)}
+              maxLength={6}
+            />
+            {errors.roomCode && <p className="error-message">{errors.roomCode}</p>}
 
-          <input
-            type="text"
-            className={`input-field ${errors.roomCode ? "error" : ""}`}
-            placeholder="Room Code (6 characters)"
-            value={roomCode}
-            onChange={(e) => setRoomCode(e.target.value)}
-            maxLength={6}
-          />
-          {errors.roomCode && <p className="error-message">{errors.roomCode}</p>}
+            <button className="create-button" onClick={handleCreateRoom}>
+              {editingIndex !== null ? "Save Changes" : "Create"}
+            </button>
+          </div>
 
-          {/* Create or Save Button */}
-          <button className="create-button" onClick={handleCreateRoom}>
-            {editingIndex !== null ? "Save Changes" : "Create"}
-          </button>
-        </div>
-
-        {/* List of Created Rooms */}
-        <div className="rooms-list" style={{ marginTop: "20px" }}>
-          {rooms.map((room, index) => (
-            <div key={index} className="room-card">
-              <h2>{room.name}</h2>
-              <p>{room.description}</p>
-              <span>Room Code: {room.code}</span>
-              <div className="room-actions">
-                <button className="edit-button" onClick={() => handleEditRoom(index)}>
-                  Edit
-                </button>
-                <button className="delete-button" onClick={() => handleDeleteRoom(index)}>
-                  Delete
-                </button>
+          <div className="rooms-list" style={{ marginTop: "20px" }}>
+            {rooms.map((room, index) => (
+              <div key={index} className="room-card">
+                <h2>{room.name}</h2>
+                <p>{room.description}</p>
+                <span>Room Code: {room.code}</span>
+                <div className="room-actions">
+                  <button className="edit-button" onClick={() => handleEditRoom(index)}>
+                    Edit
+                  </button>
+                  <button className="delete-button" onClick={() => handleDeleteRoom(index)}>
+                    Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </Container>
+            ))}
+          </div>
+        </Container>
+      </div>
     </div>
   );
 };

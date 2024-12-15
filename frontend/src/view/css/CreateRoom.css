@@ -1,6 +1,6 @@
 /* General container for the form */
 .create-room-container {
-  background-color: hsl(0, 0%, 46%);
+  background-color: hsl(0, 0%, 100%);
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
