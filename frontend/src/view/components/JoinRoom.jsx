@@ -1,113 +1,69 @@
 import React, { useState } from "react";
 import { Container } from "@mui/material";
-import "../css/JoinRoom.css";
+import Sidebar from "../components/Sidebar"; // Ensure this import is correct
+import "../css/createroom.css"; // Reuse the same CSS or create a new one if needed
 
 const JoinRoom = () => {
-  const [roomName, setRoomName] = useState("");
-  const [roomDescription, setRoomDescription] = useState("");
   const [roomCode, setRoomCode] = useState("");
-  const [errors, setErrors] = useState({});
+  const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
-  const generateRandomCode = () => {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let code = '';
-    for (let i = 0; i < 6; i++) {
-      code += characters.charAt(Math.floor(Math.random() * characters.length));
+  // Function to handle joining the room
+  const handleJoinRoom = () => {
+    if (!roomCode.trim()) {
+      setError("Room code is required");
+      setSuccessMessage("");
+    } else if (roomCode.length !== 6) {
+      setError("Room code must be exactly 6 characters");
+      setSuccessMessage("");
+    } else {
+      // Simulate room validation
+      const roomExists = validateRoomCode(roomCode); // Replace with actual backend API call
+
+      if (roomExists) {
+        setError("");
+        setSuccessMessage(`Successfully joined room with code: ${roomCode}`);
+        setRoomCode(""); // Clear input field
+      } else {
+        setError("Invalid room code. Room not found.");
+        setSuccessMessage("");
+      }
     }
-    setRoomCode(code);
   };
 
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!roomName.trim()) {
-      newErrors.roomName = "Room name is required";
-    }
-
-    if (roomName.length > 50) {
-      newErrors.roomName = "Room name must be 50 characters or less";
-    }
-
-    if (!roomDescription.trim()) {
-      newErrors.roomDescription = "Room description is required";
-    }
-
-    if (roomDescription.length > 200) {
-      newErrors.roomDescription = "Description must be 200 characters or less";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleCreateRoom = () => {
-    if (validateForm()) {
-      console.log("Room Creation Details:", {
-        roomName,
-        roomDescription,
-        roomCode
-      });
-      alert("Room Created Successfully!");
-    }
+  // Mock function to simulate room validation
+  const validateRoomCode = (code) => {
+    // Replace this with actual API logic to verify room code
+    const mockRoomCodes = ["ABC123", "XYZ456", "DEF789"];
+    return mockRoomCodes.includes(code);
   };
 
   return (
-    <div className="dashboard-container">
-      <Container 
-        fixed 
-        maxWidth="xs"
-        sx={{
-          width: '100%',
-          padding: '0 !important',
-          marginTop: '20px' // Moved closer to the top
-        }}
-      > 
-          <h1 className="page-title">Join Room</h1>
-        <div className="join-room-container">
-          <div>
-            <input  
+    <div className="classes-page">
+      <Sidebar />
+      <div className="dashboard-container">
+        <Container fixed maxWidth="xs" sx={{ marginTop: "50px" }}>
+          <h1 className="page-title" style={{ textAlign: "center", color: "#333" }}>
+            Join Room
+          </h1>
+          <div className="create-room-container">
+            <input
               type="text"
-              className={`input-field ${errors.roomName ? 'error' : ''}`}
-              placeholder="Room Name"
-              value={roomName}
-              onChange={(e) => setRoomName(e.target.value)}
-              maxLength={50}
+              className={`input-field ${error ? "error" : ""}`}
+              placeholder="Enter Room Code"
+              value={roomCode}
+              onChange={(e) => setRoomCode(e.target.value)}
+              maxLength={6}
             />
-            {errors.roomName && (
-              <p className="error-message">{errors.roomName}</p>
-            )}
+            {error && <p className="error-message">{error}</p>}
+            {successMessage && <p className="success-message">{successMessage}</p>}
 
-              <input
-              type="text"
-              className={`input-field ${errors.roomDescription ? 'error' : ''}`}
-              placeholder="Room Description"
-              value={roomDescription}
-              onChange={(e) => setRoomDescription(e.target.value)}
-              maxLength={200}
-           />
-            {errors.roomDescription && (
-              <p className="error-message">{errors.roomDescription}</p>
-            )}
-
-            <div className="room-code-container">
-              <input
-                type="text"
-                className="input-field room-code"
-                placeholder="Room Code"
-                value={roomCode}
-                onChange={(e) => setRoomCode(e.target.value)}
-                readOnly
-              />
-              <button 
-                className="join-button" 
-                onClick={handleCreateRoom}
-              >
-                Join
-              </button>
-            </div>
+            <button className="create-button" onClick={handleJoinRoom}>
+              Join
+            </button>
           </div>
-        </div>
-      </Container>
+        </Container>
+      </div>
     </div>
   );
 };

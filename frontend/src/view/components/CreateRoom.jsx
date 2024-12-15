@@ -1,39 +1,35 @@
 import React, { useState } from "react";
 import { Container } from "@mui/material";
-import "../css/CreateRoom.css";
+import Sidebar from "../components/Sidebar"; // Ensure this import is correct
+import "../css/createroom.css"; // Import your updated CSS file
 
 const CreateRoom = () => {
   const [roomName, setRoomName] = useState("");
   const [roomDescription, setRoomDescription] = useState("");
   const [roomCode, setRoomCode] = useState("");
   const [errors, setErrors] = useState({});
-
-  const generateRandomCode = () => {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let code = '';
-    for (let i = 0; i < 6; i++) {
-      code += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    setRoomCode(code);
-  };
+  const [rooms, setRooms] = useState([]); // List of created rooms
+  const [editingIndex, setEditingIndex] = useState(null); // Track which room is being edited
 
   const validateForm = () => {
     const newErrors = {};
 
     if (!roomName.trim()) {
       newErrors.roomName = "Room name is required";
-    }
-
-    if (roomName.length > 50) {
+    } else if (roomName.length > 50) {
       newErrors.roomName = "Room name must be 50 characters or less";
     }
 
     if (!roomDescription.trim()) {
       newErrors.roomDescription = "Room description is required";
+    } else if (roomDescription.length > 200) {
+      newErrors.roomDescription = "Description must be 200 characters or less";
     }
 
-    if (roomDescription.length > 200) {
-      newErrors.roomDescription = "Description must be 200 characters or less";
+    if (!roomCode.trim()) {
+      newErrors.roomCode = "Room code is required";
+    } else if (roomCode.length !== 6) {
+      newErrors.roomCode = "Room code must be exactly 6 characters";
     }
 
     setErrors(newErrors);
@@ -42,72 +38,108 @@ const CreateRoom = () => {
 
   const handleCreateRoom = () => {
     if (validateForm()) {
-      console.log("Room Creation Details:", {
-        roomName,
-        roomDescription,
-        roomCode
-      });
-      alert("Room Created Successfully!");
+      if (editingIndex !== null) {
+        const updatedRooms = rooms.map((room, index) =>
+          index === editingIndex
+            ? { name: roomName, description: roomDescription, code: roomCode }
+            : room
+        );
+        setRooms(updatedRooms);
+        setEditingIndex(null);
+      } else {
+        const newRoom = {
+          name: roomName,
+          description: roomDescription,
+          code: roomCode,
+        };
+        setRooms([...rooms, newRoom]);
+      }
+
+      setRoomName("");
+      setRoomDescription("");
+      setRoomCode("");
+      setErrors({});
     }
   };
 
+  const handleEditRoom = (index) => {
+    const roomToEdit = rooms[index];
+    setRoomName(roomToEdit.name);
+    setRoomDescription(roomToEdit.description);
+    setRoomCode(roomToEdit.code);
+    setEditingIndex(index);
+  };
+
+  const handleDeleteRoom = (index) => {
+    const updatedRooms = rooms.filter((_, i) => i !== index);
+    setRooms(updatedRooms);
+  };
+
   return (
-    <div className="dashboard-container">
-      <Container 
-        fixed 
-        maxWidth="xs"
-        sx={{
-          width: '100%',
-          padding: '0 !important',
-          marginTop: '20px' // Moved closer to the top
-        }}
-      > 
-          <h1 className="page-title">Create Room</h1>
-        <div className="create-room-container">
-          <div>
-            <input  
+    <div className="classes-page">
+      <Sidebar />
+      <div className="dashboard-container">
+        <Container fixed maxWidth="xs" sx={{ marginTop: "50px" }}>
+          <h1 className="page-title" style={{ textAlign: "center", color: "#333" }}>
+            {editingIndex !== null ? "Edit Room" : "Create Room"}
+          </h1>
+          <div className="create-room-container">
+            <input
               type="text"
-              className={`input-field ${errors.roomName ? 'error' : ''}`}
+              className={`input-field ${errors.roomName ? "error" : ""}`}
               placeholder="Room Name"
               value={roomName}
               onChange={(e) => setRoomName(e.target.value)}
               maxLength={50}
             />
-            {errors.roomName && (
-              <p className="error-message">{errors.roomName}</p>
-            )}
+            {errors.roomName && <p className="error-message">{errors.roomName}</p>}
 
-              <input
+            <input
               type="text"
-              className={`input-field ${errors.roomDescription ? 'error' : ''}`}
+              className={`input-field ${errors.roomDescription ? "error" : ""}`}
               placeholder="Room Description"
               value={roomDescription}
               onChange={(e) => setRoomDescription(e.target.value)}
               maxLength={200}
-           />
+            />
             {errors.roomDescription && (
               <p className="error-message">{errors.roomDescription}</p>
             )}
 
-            <div className="room-code-container">
-              <input
-                type="text"
-                className="input-field room-code"
-                placeholder="Room Code"
-                value={roomCode}
-                onChange={(e) => setRoomCode(e.target.value)}
-                readOnly
-              />
-              <button 
-                className="create-button" 
-                onClick={handleCreateRoom}
-              >
-                Create
-              </button>
-            </div>
+            <input
+              type="text"
+              className={`input-field ${errors.roomCode ? "error" : ""}`}
+              placeholder="Room Code (6 characters)"
+              value={roomCode}
+              onChange={(e) => setRoomCode(e.target.value)}
+              maxLength={6}
+            />
+            {errors.roomCode && <p className="error-message">{errors.roomCode}</p>}
+
+            <button className="create-button" onClick={handleCreateRoom}>
+              {editingIndex !== null ? "Save Changes" : "Create"}
+            </button>
           </div>
-        </div>
-      </Container>
+
+          <div className="rooms-list" style={{ marginTop: "20px" }}>
+            {rooms.map((room, index) => (
+              <div key={index} className="room-card">
+                <h2>{room.name}</h2>
+                <p>{room.description}</p>
+                <span>Room Code: {room.code}</span>
+                <div className="room-actions">
+                  <button className="edit-button" onClick={() => handleEditRoom(index)}>
+                    Edit
+                  </button>
+                  <button className="delete-button" onClick={() => handleDeleteRoom(index)}>
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Container>
+      </div>
     </div>
   );
 };

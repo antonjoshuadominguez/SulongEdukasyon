@@ -2,7 +2,7 @@
   position: fixed; /* Ensure sidebar is fixed on the left */
   top: 0;
   left: 0;
-  width: 365px !important; /* Force sidebar to have width of 350px */
+  width: 390px !important; /* Force sidebar to have width of 350px */
   height: 100%; /* Full height */
   background: linear-gradient(135deg, #2C3E50, #34495E);
   color: #FFFFFF;
