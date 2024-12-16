@@ -29,10 +29,16 @@ public class RoomController {
         return roomService.updateRoom(roomId, room);
     }
 
-    // Get all rooms
-    @GetMapping("/all")
-    public ResponseEntity<List<RoomEntity>> getAllRooms() {
-        return ResponseEntity.ok(roomService.getAllRooms());
+    // Get all rooms for a specific teacher
+    @GetMapping("/teacher/{teacherId}")
+    public ResponseEntity<List<RoomEntity>> getRoomsByTeacher(@PathVariable long teacherId) {
+        return ResponseEntity.ok(roomService.getRoomsByTeacher(teacherId));
+    }
+
+    // Get all rooms that a student has joined
+    @GetMapping("/student/{studentId}")
+    public ResponseEntity<List<RoomEntity>> getRoomsByStudent(@PathVariable long studentId) {
+        return ResponseEntity.ok(roomService.getRoomsByStudent(studentId));
     }
 
     // Get room by room code (for students to join)
