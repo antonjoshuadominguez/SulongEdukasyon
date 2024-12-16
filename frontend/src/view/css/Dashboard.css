@@ -1,3 +1,5 @@
+/* Existing Dashboard styles remain unchanged */
+
 .dashboard-page {
   display: flex;
   margin-left: 365px; /* Space for the 365px wide sidebar */
@@ -59,4 +61,97 @@
 .dashboard-section p {
   font-size: 1rem;
   color: #555;
+}
+
+/* New Styles for Cog Logo Button and Modal */
+.cog-button {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1000; /* Ensure it appears above other elements */
+}
+
+.cog-logo {
+  width: 50px; /* Adjust size as needed */
+  height: 50px;
+}
+
+/* Modal overlay to cover the screen */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999; /* Behind the cog button but above other content */
+}
+
+/* Modal content box - increased width and height for a bigger modal */
+.modal-content {
+  background-color: white;
+  border-radius: 10px;
+  width: 400px; /* Increased width */
+  height: 250px; /* Increased height */
+  padding: 20px;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin-left: 365px; /* Ensures it is aligned properly with the sidebar */
+}
+
+/* Modal header */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #007bff;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #007bff;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  color: red;
+}
+
+/* Modal body */
+.modal-body {
+  margin: 20px 0;
+  font-size: 1rem;
+  color: #555;
+}
+
+/* Logout button */
+.logout-button {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.logout-button:hover {
+  background-color: darkred;
 }
