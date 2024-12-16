@@ -5,5 +5,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TeacherRepo extends JpaRepository<TeacherEntity, Long> {
-    TeacherEntity findByUserEmail(String email);
+    
+    TeacherEntity findByTeacherId(Long teacherId);  // New method to find teacher by teacherId
 }
