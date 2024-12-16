@@ -1,11 +1,12 @@
 package com.SulongEdukasyon.Sulong.Edukasyon.Models.Student;
 
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.User.UserEntity;
-import com.SulongEdukasyon.Sulong.Edukasyon.Models.StudentRoom.StudentRoomEntity;  // Import StudentRoomEntity
+import com.SulongEdukasyon.Sulong.Edukasyon.Models.StudentRoom.StudentRoomEntity;
+import com.SulongEdukasyon.Sulong.Edukasyon.Models.StudentSection.StudentSectionEntity;  // Import StudentSectionEntity
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Set;  // Import Set
+import java.util.Set;
 
 @Entity
 @Table(name = "students", schema = "public")
@@ -24,7 +25,10 @@ public class StudentEntity {
     private UserEntity user;
 
     @OneToMany(mappedBy = "student")
-    private Set<StudentRoomEntity> studentRooms;  // Correctly references StudentRoomEntity
+    private Set<StudentRoomEntity> studentRooms;
+
+    @OneToMany(mappedBy = "student")
+    private Set<StudentSectionEntity> studentSections; 
 
     public StudentEntity(UserEntity user) {
         this.user = user;

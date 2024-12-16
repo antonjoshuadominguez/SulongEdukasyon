@@ -17,8 +17,8 @@ public class RoomEntity {
     private long roomId;
 
     private String roomName;
-    private String roomDescription;  // Optional, for room details
-    private String roomCode;  // Unique code for the room
+    private String roomDescription;
+    private String roomCode;
 
     @ManyToOne
     @JoinColumn(name = "teacher_id", nullable = false)
