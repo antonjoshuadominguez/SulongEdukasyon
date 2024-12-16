@@ -1,143 +1,233 @@
 import React, { useState } from "react";
-import { Container } from "@mui/material";
-import Sidebar from "../components/Sidebar"; // Ensure this import is correct
-import "../css/createroom.css"; // Import your updated CSS file
+import { Container, Box, Typography, Button, TextField } from "@mui/material";
+import Sidebar from "../components/Sidebar";
+import "../css/createroom.css";
 
 const CreateRoom = () => {
   const [roomName, setRoomName] = useState("");
   const [roomDescription, setRoomDescription] = useState("");
   const [roomCode, setRoomCode] = useState("");
   const [errors, setErrors] = useState({});
-  const [rooms, setRooms] = useState([]); // List of created rooms
-  const [editingIndex, setEditingIndex] = useState(null); // Track which room is being edited
+
+  const handleCreateRoom = () => {
+    // Handle room creation logic here
+    console.log({
+      roomName,
+      roomDescription,
+      roomCode,
+    });
+  };
 
   const validateForm = () => {
     const newErrors = {};
 
     if (!roomName.trim()) {
       newErrors.roomName = "Room name is required";
-    } else if (roomName.length > 50) {
-      newErrors.roomName = "Room name must be 50 characters or less";
     }
 
     if (!roomDescription.trim()) {
       newErrors.roomDescription = "Room description is required";
-    } else if (roomDescription.length > 200) {
-      newErrors.roomDescription = "Description must be 200 characters or less";
     }
 
     if (!roomCode.trim()) {
       newErrors.roomCode = "Room code is required";
-    } else if (roomCode.length !== 6) {
-      newErrors.roomCode = "Room code must be exactly 6 characters";
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleCreateRoom = () => {
-    if (validateForm()) {
-      if (editingIndex !== null) {
-        const updatedRooms = rooms.map((room, index) =>
-          index === editingIndex
-            ? { name: roomName, description: roomDescription, code: roomCode }
-            : room
-        );
-        setRooms(updatedRooms);
-        setEditingIndex(null);
-      } else {
-        const newRoom = {
-          name: roomName,
-          description: roomDescription,
-          code: roomCode,
-        };
-        setRooms([...rooms, newRoom]);
-      }
-
-      setRoomName("");
-      setRoomDescription("");
-      setRoomCode("");
-      setErrors({});
-    }
-  };
-
-  const handleEditRoom = (index) => {
-    const roomToEdit = rooms[index];
-    setRoomName(roomToEdit.name);
-    setRoomDescription(roomToEdit.description);
-    setRoomCode(roomToEdit.code);
-    setEditingIndex(index);
-  };
-
-  const handleDeleteRoom = (index) => {
-    const updatedRooms = rooms.filter((_, i) => i !== index);
-    setRooms(updatedRooms);
-  };
-
   return (
     <div className="classes-page">
       <Sidebar />
       <div className="dashboard-container">
-        <Container fixed maxWidth="xs" sx={{ marginTop: "50px" }}>
-          <h1 className="page-title" style={{ textAlign: "center", color: "#333" }}>
-            {editingIndex !== null ? "Edit Room" : "Create Room"}
-          </h1>
-          <div className="create-room-container">
-            <input
-              type="text"
-              className={`input-field ${errors.roomName ? "error" : ""}`}
-              placeholder="Room Name"
+        {/* Left Side: My Rooms Button */}
+        <Box
+          sx={{
+            position: "absolute",
+            top: "10px",
+            left: "10px",
+            display: "flex",
+            justifyContent: "flex-start",
+            padding: "10px",
+          }}
+        >
+          <Button variant="contained" color="primary">
+            My Rooms
+          </Button>
+        </Box>
+
+        {/* Top Right: My Rooms Button */}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            padding: "10px",
+            position: "absolute",
+            top: "10px",
+            right: "10px",
+          }}
+        >
+          <Button variant="contained" color="primary">
+            My Rooms
+          </Button>
+        </Box>
+
+        {/* Main Content */}
+        <Container sx={{ marginTop: "20px" }}>
+          <Box sx={{ textAlign: "center", marginBottom: "20px" }}>
+            <Typography variant="h4" fontWeight="bold">
+              Create Room
+            </Typography>
+          </Box>
+
+          {/* Create Room Input */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              backgroundColor: "white",
+              padding: "20px",
+              borderRadius: "8px",
+              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+              marginBottom: "20px",
+            }}
+          >
+            <TextField
+              label="Room Name"
               value={roomName}
               onChange={(e) => setRoomName(e.target.value)}
-              maxLength={50}
+              error={!!errors.roomName}
+              helperText={errors.roomName}
+              fullWidth
+              margin="normal"
             />
-            {errors.roomName && <p className="error-message">{errors.roomName}</p>}
-
-            <input
-              type="text"
-              className={`input-field ${errors.roomDescription ? "error" : ""}`}
-              placeholder="Room Description"
+            <TextField
+              label="Room Description"
               value={roomDescription}
               onChange={(e) => setRoomDescription(e.target.value)}
-              maxLength={200}
+              error={!!errors.roomDescription}
+              helperText={errors.roomDescription}
+              fullWidth
+              margin="normal"
             />
-            {errors.roomDescription && (
-              <p className="error-message">{errors.roomDescription}</p>
-            )}
-
-            <input
-              type="text"
-              className={`input-field ${errors.roomCode ? "error" : ""}`}
-              placeholder="Room Code (6 characters)"
+            <TextField
+              label="Room Code"
               value={roomCode}
               onChange={(e) => setRoomCode(e.target.value)}
-              maxLength={6}
+              error={!!errors.roomCode}
+              helperText={errors.roomCode}
+              fullWidth
+              margin="normal"
             />
-            {errors.roomCode && <p className="error-message">{errors.roomCode}</p>}
+          </Box>
 
-            <button className="create-button" onClick={handleCreateRoom}>
-              {editingIndex !== null ? "Save Changes" : "Create"}
-            </button>
-          </div>
+          {/* 4 Pics 1 Word and Drawing Questions */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-around",
+              gap: "20px",
+              flexWrap: "wrap",
+            }}
+          >
+            {/* Left Panel */}
+            <Box
+              sx={{
+                flex: 1,
+                minWidth: "300px",
+                backgroundColor: "#e0e0e0",
+                borderRadius: "8px",
+                padding: "15px",
+              }}
+            >
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                textAlign="center"
+                marginBottom="10px"
+              >
+                4 Pics 1 Word Questions
+              </Typography>
+              <Box
+                sx={{
+                  backgroundColor: "#007bff",
+                  padding: "10px",
+                  color: "white",
+                  borderRadius: "8px",
+                }}
+              >
+                <Typography>Answer: Volcano</Typography>
+                <Box sx={{ display: "flex", justifyContent: "space-around", marginTop: "10px" }}>
+                  <Button variant="contained" color="primary">img1.png</Button>
+                  <Button variant="contained" color="primary">img2.png</Button>
+                </Box>
+                <Box sx={{ display: "flex", justifyContent: "space-around", marginTop: "10px" }}>
+                  <Button variant="contained" color="primary">img3.png</Button>
+                  <Button variant="contained" color="primary">img4.png</Button>
+                </Box>
+              </Box>
+              <Button
+                variant="contained"
+                sx={{ display: "block", margin: "20px auto 0" }}
+              >
+                Create Question
+              </Button>
+            </Box>
 
-          <div className="rooms-list" style={{ marginTop: "20px" }}>
-            {rooms.map((room, index) => (
-              <div key={index} className="room-card">
-                <h2>{room.name}</h2>
-                <p>{room.description}</p>
-                <span>Room Code: {room.code}</span>
-                <div className="room-actions">
-                  <button className="edit-button" onClick={() => handleEditRoom(index)}>
-                    Edit
-                  </button>
-                  <button className="delete-button" onClick={() => handleDeleteRoom(index)}>
-                    Delete
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+            {/* Right Panel */}
+            <Box
+              sx={{
+                flex: 1,
+                minWidth: "300px",
+                backgroundColor: "#e0e0e0",
+                borderRadius: "8px",
+                padding: "15px",
+              }}
+            >
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                textAlign="center"
+                marginBottom="10px"
+              >
+                Drawing Questions
+              </Typography>
+              <Box
+                sx={{
+                  backgroundColor: "#007bff",
+                  padding: "10px",
+                  color: "white",
+                  borderRadius: "8px",
+                }}
+              >
+                <Typography>Answer: Volcano</Typography>
+                <Typography>Timer: 60 seconds</Typography>
+              </Box>
+              <Button
+                variant="contained"
+                sx={{ display: "block", margin: "20px auto 0" }}
+              >
+                Create Question
+              </Button>
+            </Box>
+          </Box>
+
+          {/* Create Room Button Below Questions */}
+          <Box sx={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+            <Button
+              variant="contained"
+              sx={{ padding: "10px 20px" }}
+              onClick={() => {
+                if (validateForm()) {
+                  handleCreateRoom();
+                }
+              }}
+            >
+              Create Room
+            </Button>
+          </Box>
         </Container>
       </div>
     </div>

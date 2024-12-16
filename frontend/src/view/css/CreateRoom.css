@@ -1,3 +1,13 @@
+.classes-page {
+  display: flex;
+}
+
+.dashboard-container {
+  flex: 1;
+  padding: 20px;
+  background-color: #f5f5f5;
+}
+
 /* General container for the form */
 .create-room-container {
   background-color: hsl(0, 0%, 100%);
