@@ -60,6 +60,14 @@ const Dashboard = () => {
       <div className="dashboard-content">
         <header className="dashboard-header">
           <h1>Welcome to Your Dashboard</h1>
+          {/* Cog Icon */}
+          <button className="cog-button" onClick={handleCogButtonClick}>
+            <img
+              className="cog-logo"
+              src="/coglogo.png" // Adjusted path for image in the public folder
+              alt="Settings"
+            />
+          </button>
         </header>
         <main className="dashboard-main">
           <section className="dashboard-section">
@@ -67,7 +75,10 @@ const Dashboard = () => {
             <div className="dashboard-user-container">
               <div className="username-display">Teacher</div>
               <div className="role-display">Teacher</div>
-              <button className="create-section-button" onClick={openCreateSectionPopup}>
+              <button
+                className="create-section-button"
+                onClick={openCreateSectionPopup}
+              >
                 Create Section
               </button>
             </div>
@@ -96,7 +107,12 @@ const Dashboard = () => {
             <div className="create-section-popup-content">
               <div className="create-section-popup-header">
                 <h3>Create Section</h3>
-                <button className="close-popup-button" onClick={closeCreateSectionPopup}>X</button>
+                <button
+                  className="close-popup-button"
+                  onClick={closeCreateSectionPopup}
+                >
+                  X
+                </button>
               </div>
               <div className="create-section-popup-body">
                 <input
@@ -110,8 +126,34 @@ const Dashboard = () => {
                   value={sectionDescription}
                   onChange={(e) => setSectionDescription(e.target.value)}
                 ></textarea>
-                <button className="create-section-popup-button" onClick={createSection}>
+                <button
+                  className="create-section-popup-button"
+                  onClick={createSection}
+                >
                   Create Section
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Settings Modal */}
+        {isModalOpen && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h2>Settings</h2>
+                <button className="close-button" onClick={handleCloseModal}>
+                  X
+                </button>
+              </div>
+              <div className="modal-body">
+                <p>Settings content goes here.</p>
+                <button
+                  className="logout-button"
+                  onClick={handleLogout}
+                >
+                  Logout
                 </button>
               </div>
             </div>
