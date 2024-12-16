@@ -22,15 +22,15 @@ public class TopicEntity {
     @JoinColumn(name = "lesson_id", nullable = false)
     private LessonEntity lesson;
 
-    private String topicContent; 
+    private String topicDescription;
     private int studentsCurrentlyHere;
 
     private String videoUrl; 
 
-    public TopicEntity(String topicTitle, LessonEntity lesson, String topicContent, String videoUrl) {
+    public TopicEntity(String topicTitle, LessonEntity lesson, String topicDescription, String videoUrl) {
         this.topicTitle = topicTitle;
         this.lesson = lesson;
-        this.topicContent = topicContent;
+        this.topicDescription = topicDescription;
         this.videoUrl = videoUrl;
     }
 }
