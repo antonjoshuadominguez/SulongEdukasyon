@@ -1,5 +1,3 @@
-/* Existing Dashboard styles remain unchanged */
-
 /* Create Section Popup Overlay */
 .create-section-popup-overlay {
   position: fixed;
@@ -255,8 +253,6 @@
   background-color: darkblue;
 }
 
-
-/* Styles for the Cog Logo Button and Modal */
 .cog-button {
   position: fixed;
   top: 20px;
@@ -264,13 +260,15 @@
   background: none;
   border: none;
   cursor: pointer;
+  z-index: 1001;
   padding: 0;
-  z-index: 1000;
 }
 
 .cog-logo {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  display: block;
 }
 
 /* Modal overlay to cover the screen */
