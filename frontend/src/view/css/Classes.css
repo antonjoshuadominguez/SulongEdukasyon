@@ -1,79 +1,170 @@
+/* Classes Page Layout */
 .classes-page {
-    display: flex;
-    margin-left: 365px; /* Space for the 365px wide sidebar */
-    background-color: #f6f5f7;
-    height: 100vh;
-    width: 90vw; /* Adjusted width of the classes content area */
-    overflow: hidden;
-  }
-  
-  .classes-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Vertically center content */
-    align-items: center; /* Horizontally center content */
-    background-color: #f6f5f7;
-    padding: 20px;
-  }
-  
-  .classes-header {
-    background-color: #007bff;
-    color: white;
-    padding: 1.5rem 2rem;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 100%;
-  }
-  
-  .classes-header h1 {
-    margin: 0;
-    font-size: 1.8rem;
-  }
-  
-  .classes-main {
-    display: flex;
-    flex-grow: 1;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    padding: 2rem;
-  }
-  
-  .classes-section {
-    background-color: white;
-    border-radius: 10px;
-    padding: 2rem;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    max-width: 1000px;
-    width: 100%;
-  }
-  
-  .classes-section h2 {
-    font-size: 1.5rem;
-    color: #007bff;
-    margin-bottom: 1rem;
-  }
-  
-  .classes-section p {
-    font-size: 1rem;
-    color: #555;
-  }
-  
-  .classes-section ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .classes-section ul li {
-    padding: 10px;
-    background-color: #f2f2f2;
-    border-radius: 5px;
-    margin-bottom: 10px;
-  }
-  
-  .classes-section ul li:hover {
-    background-color: #e1e1e1;
-  }
-  
+  display: flex;
+  height: 100vh;
+  background-color: #f6f5f7;
+  overflow: hidden;
+}
+
+/* Sidebar Placeholder */
+.sidebar {
+  width: 365px; /* Sidebar width */
+}
+
+/* Main Content */
+.classes-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center vertically */
+  align-items: center; /* Center horizontally */
+  margin-left: 365px; /* Offset the sidebar width */
+  background-color: #fff; /* White background for contrast */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: calc(100vw - 365px); /* Full width minus the sidebar */
+  max-width: 1200px; /* Limit max width */
+  padding: 20px;
+  overflow-y: auto; /* Enable scrolling if needed */
+}
+
+.classes-header {
+  background-color: #007bff;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  border-radius: 10px;
+  width: 100%; /* Full width of the content */
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.classes-header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+/* Main Section */
+.classes-main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+  width: 100%;
+}
+
+.classes-section {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  text-align: center;
+}
+
+.classes-section h2 {
+  font-size: 1.5rem;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.classes-section p {
+  color: #555;
+  margin-bottom: 20px;
+}
+
+/* Class List */
+.classes-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.classes-list li {
+  margin: 10px 0;
+}
+
+.class-link {
+  display: block;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #007bff;
+  font-weight: bold;
+  text-align: left;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.class-link:hover {
+  background-color: #eaeaea;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.class-link:active {
+  background-color: #d9d9d9;
+}
+
+/* Smaller and centered layout for class detail pages */
+.class-detail-page {
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  height: 100vh;
+  background-color: #f6f5f7; /* Light background color */
+}
+
+.class-detail-content {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 20px 30px;
+  width: 80%; /* Smaller width for detail pages */
+  max-width: 600px; /* Limit max width */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center; /* Center text inside */
+}
+
+.class-detail-header {
+  margin-bottom: 20px;
+  color: #007bff;
+  font-size: 1.8rem;
+}
+
+.class-detail-description {
+  margin-bottom: 20px;
+  font-size: 1rem;
+  color: #555;
+}
+
+.class-detail-link {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.class-detail-link:hover {
+  background-color: #0056b3;
+}
+
+.back-button {
+  background-color: #eaeaea;
+  color: #333;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #d9d9d9;
+}
