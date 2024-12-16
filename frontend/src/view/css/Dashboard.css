@@ -161,18 +161,23 @@
 .username-role-container {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
+  padding: 10px 20px;
 }
 
 .username-display {
-  font-size: 2rem;
+  font-size: 1.5rem;
   color: #007bff;
   font-weight: bold;
+  text-align: left; /* Align username to the left */
 }
 
 .role-display {
   font-size: 1.2rem;
   color: #555;
+  text-align: right; /* Align role to the right */
+  font-weight: bold;
 }
 
 .create-section-button {
