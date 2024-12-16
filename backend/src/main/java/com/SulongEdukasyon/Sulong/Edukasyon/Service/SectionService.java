@@ -36,9 +36,9 @@ public class SectionService {
         }
     }
 
-    // Get all sections
-    public List<SectionEntity> getAllSections() {
-        return sectionRepo.findAll();
+    // Get sections by teacher ID
+    public List<SectionEntity> getSectionsByTeacher(long teacherId) {
+        return sectionRepo.findByTeacher_TeacherId(teacherId);
     }
 
     // Get section by ID

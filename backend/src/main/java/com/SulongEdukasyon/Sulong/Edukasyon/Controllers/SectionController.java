@@ -28,10 +28,10 @@ public class SectionController {
         return sectionService.updateSection(sectionId, section);
     }
 
-    // Get all sections
-    @GetMapping("/all")
-    public ResponseEntity<List<SectionEntity>> getAllSections() {
-        return ResponseEntity.ok(sectionService.getAllSections());
+    // Get all sections for a specific teacher (added teacherId filter)
+    @GetMapping("/teacher/{teacherId}")
+    public ResponseEntity<List<SectionEntity>> getSectionsByTeacher(@PathVariable long teacherId) {
+        return ResponseEntity.ok(sectionService.getSectionsByTeacher(teacherId));
     }
 
     // Get a section by ID
