@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UpdateUserDto {
     private long userID;
-    private String email;
+    private String userEmail;
     private String firstname;   
     private String lastname;
 }
