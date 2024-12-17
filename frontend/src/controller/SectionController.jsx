@@ -14,9 +14,9 @@ export const fetchSections = async (teacherId) => {
 export const createSection = async (sectionData) => {
   try {
     const response = await axios.post(`${API_URL}/sections/create`, {
-      sectionName: sectionData.sectionName,   
+      sectionName: sectionData.sectionName,
       sectionDescription: sectionData.sectionDescription,
-      teacherID: sectionData.teacherID 
+      teacherID: sectionData.teacherID
     }, {
       headers: { 'Content-Type': 'application/json' },
     });
@@ -43,5 +43,32 @@ export const deleteSection = async (sectionId) => {
     return response.data;
   } catch (error) {
     throw new Error('Error deleting section');
+  }
+};
+
+export const addStudentToSection = async (sectionId, studentId) => {
+  try {
+    const response = await axios.post(`${API_URL}/sections/add-student/${sectionId}`, { studentID: studentId });
+    return response.data;
+  } catch (error) {
+    throw new Error('Error adding student to section');
+  }
+};
+
+export const deleteStudentFromSection = async (sectionId, studentId) => {
+  try {
+    const response = await axios.delete(`${API_URL}/sections/remove-student/${sectionId}/${studentId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error('Error removing student from section');
+  }
+};
+
+export const fetchStudentsInSection = async (sectionId) => {
+  try {
+    const response = await axios.get(`${API_URL}/sections/students/${sectionId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error('Error fetching students from section');
   }
 };

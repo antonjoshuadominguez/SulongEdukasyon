@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../css/Dashboard.css';
 import Sidebar from './Sidebar';
-import { fetchSections, createSection, updateSection, deleteSection } from '../../controller/SectionController';
+import { fetchSections, createSection, updateSection, deleteSection, addStudentToSection, deleteStudentFromSection, fetchStudentsInSection } from '../../controller/SectionController';
 
 const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,14 +15,14 @@ const Dashboard = () => {
 
   // Function to fetch sections when the button is clicked
   const loadSections = async () => {
-    setLoading(true);  // Set loading to true when fetching sections
+    setLoading(true);
     try {
       const data = await fetchSections(teacherId);
       setSections(data);
     } catch (error) {
       console.error('Error fetching sections:', error);
     } finally {
-      setLoading(false);  // Set loading to false after fetching is complete
+      setLoading(false);
     }
   };
 
@@ -101,12 +101,45 @@ const Dashboard = () => {
     }
   };
 
-  // Open the edit section popup and pre-fill the section data
   const openEditSectionPopup = (section) => {
     setEditingSection(section); // Set the section being edited
     setSectionName(section.section_name); // Pre-fill section name
     setSectionDescription(section.section_description); // Pre-fill section description
     setIsPopupOpen(true);
+  };
+
+  // Add student to the section
+  const handleAddStudent = async (sectionId, studentId) => {
+    try {
+      await addStudentToSection(sectionId, studentId);
+      const updatedSections = sections.map((section) => {
+        if (section.sectionID === sectionId) {
+          section.students.push({ studentId }); // Assuming you are keeping the student object
+        }
+        return section;
+      });
+      setSections(updatedSections);
+    } catch (error) {
+      console.error('Error adding student:', error);
+      alert('Error adding student');
+    }
+  };
+
+  // Remove student from section
+  const handleRemoveStudent = async (sectionId, studentId) => {
+    try {
+      await deleteStudentFromSection(sectionId, studentId);
+      const updatedSections = sections.map((section) => {
+        if (section.sectionID === sectionId) {
+          section.students = section.students.filter((student) => student.studentId !== studentId);
+        }
+        return section;
+      });
+      setSections(updatedSections);
+    } catch (error) {
+      console.error('Error removing student:', error);
+      alert('Error removing student');
+    }
   };
 
   return (
@@ -143,10 +176,15 @@ const Dashboard = () => {
                       <div key={section.sectionID} className="section-card">
                         <h3>{section.section_name}</h3>
                         <p>{section.section_description}</p>
-                        <button className="add-student-button">Add Student</button>
+                        <button
+                          className="add-student-button"
+                          onClick={() => handleAddStudent(section.sectionID, studentId)}
+                        >
+                          Add Student
+                        </button>
                         <button
                           className="edit-section-button"
-                          onClick={() => openEditSectionPopup(section)} // Open edit popup for the selected section
+                          onClick={() => openEditSectionPopup(section)}
                         >
                           Edit Section
                         </button>
@@ -156,19 +194,29 @@ const Dashboard = () => {
                         >
                           Delete Section
                         </button>
+                        <div className="student-list">
+                          <h4>Students:</h4>
+                          {section.students && section.students.length > 0 ? (
+                            section.students.map((student) => (
+                              <div key={student.studentId}>
+                                <span>{student.name}</span>
+                                <button
+                                  className="remove-student-button"
+                                  onClick={() => handleRemoveStudent(section.sectionID, student.studentId)}
+                                >
+                                  Remove
+                                </button>
+                              </div>
+                            ))
+                          ) : (
+                            <p>No students added yet.</p>
+                          )}
+                        </div>
                       </div>
                     ))
                   ) : (
                     <p>No sections created yet.</p>
                   )}
-                </div>
-              </div>
-
-              {/* Added My Lessons container */}
-              <div className="my-lessons-container">
-                <h2>My Lessons</h2>
-                <div className="lessons-content">
-                  <p>No lessons available yet.</p>
                 </div>
               </div>
             </div>
