@@ -158,14 +158,14 @@ const CreateRoom = () => {
                   borderRadius: "8px",
                 }}
               >
-                <Typography>Answer: Volcano</Typography>
+                <Typography>Answer: </Typography>
                 <Box sx={{ display: "flex", justifyContent: "space-around", marginTop: "10px" }}>
-                  <Button variant="contained" color="primary">img1.png</Button>
-                  <Button variant="contained" color="primary">img2.png</Button>
+                  <Button variant="contained" color="primary"></Button>
+                  <Button variant="contained" color="primary"></Button>
                 </Box>
                 <Box sx={{ display: "flex", justifyContent: "space-around", marginTop: "10px" }}>
-                  <Button variant="contained" color="primary">img3.png</Button>
-                  <Button variant="contained" color="primary">img4.png</Button>
+                  <Button variant="contained" color="primary"></Button>
+                  <Button variant="contained" color="primary"></Button>
                 </Box>
               </Box>
               <Button
@@ -202,8 +202,8 @@ const CreateRoom = () => {
                   borderRadius: "8px",
                 }}
               >
-                <Typography>Answer: Volcano</Typography>
-                <Typography>Timer: 60 seconds</Typography>
+                <Typography>Answer: </Typography>
+                <Typography>Timer: </Typography>
               </Box>
               <Button
                 variant="contained"
