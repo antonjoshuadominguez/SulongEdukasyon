@@ -1,57 +1,112 @@
 import React, { useState } from 'react';
 import '../css/Dashboard.css';
 import Sidebar from './Sidebar';
+import { fetchSections, createSection, updateSection, deleteSection } from '../../controller/SectionController';
 
 const Dashboard = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false); // State to track modal visibility
-  const [sections, setSections] = useState([]); // State to track created sections
-  const [sectionName, setSectionName] = useState(''); // Section name input
-  const [sectionDescription, setSectionDescription] = useState(''); // Section description input
-  const [isPopupOpen, setIsPopupOpen] = useState(false); // State to handle popup visibility
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [sections, setSections] = useState([]);
+  const [sectionName, setSectionName] = useState('');
+  const [sectionDescription, setSectionDescription] = useState('');
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [editingSection, setEditingSection] = useState(null); // Track the section being edited
+  const teacherId = 1;
 
-  // Function to handle opening the modal when the cog is clicked
+  // Function to fetch sections when the button is clicked
+  const loadSections = async () => {
+    setLoading(true);  // Set loading to true when fetching sections
+    try {
+      const data = await fetchSections(teacherId);
+      setSections(data);
+    } catch (error) {
+      console.error('Error fetching sections:', error);
+    } finally {
+      setLoading(false);  // Set loading to false after fetching is complete
+    }
+  };
+
   const handleCogButtonClick = () => {
-    setIsModalOpen(true); // Open modal
+    setIsModalOpen(true);
   };
 
-  // Function to handle closing the modal when the close button is clicked
   const handleCloseModal = () => {
-    setIsModalOpen(false); // Close modal
+    setIsModalOpen(false);
   };
 
-  // Function to handle logging out
-  const handleLogout = () => {
-    alert('Logging out!'); // Replace with actual logout logic
-    setIsModalOpen(false); // Close modal after logging out
-  };
-
-  // Function to open the "Create Section" popup
   const openCreateSectionPopup = () => {
     setIsPopupOpen(true);
   };
 
-  // Function to close the "Create Section" popup
   const closeCreateSectionPopup = () => {
     setIsPopupOpen(false);
     setSectionName('');
     setSectionDescription('');
+    setEditingSection(null); // Reset editingSection state when closing the popup
   };
 
-  // Function to handle creating a new section
-  const createSection = () => {
+  const handleCreateSection = async () => {
     if (sectionName && sectionDescription) {
-      // Add new section to the sections list
-      const newSection = {
-        name: sectionName,
-        description: sectionDescription,
+      const sectionData = {
+        sectionName,
+        sectionDescription,
+        teacherID: teacherId,
       };
-      setSections([...sections, newSection]);
 
-      // Close popup after creating section
-      closeCreateSectionPopup();
+      try {
+        const newSection = await createSection(sectionData);
+        setSections([...sections, newSection]);
+        closeCreateSectionPopup();
+      } catch (error) {
+        console.error('Error creating section:', error);
+        alert('Error creating section');
+      }
     } else {
       alert('Please enter both Section Name and Section Description.');
     }
+  };
+
+  const handleUpdateSection = async () => {
+    if (sectionName && sectionDescription && editingSection) {
+      const updatedData = {
+        sectionName,
+        sectionDescription,
+        teacherID: teacherId, // Ensure the teacherID is included
+      };
+
+      try {
+        const updatedSection = await updateSection(editingSection.sectionID, updatedData);
+        // Update the sections list with the updated section
+        const updatedSections = sections.map((section) =>
+          section.sectionID === editingSection.sectionID ? updatedSection : section
+        );
+        setSections(updatedSections);
+        closeCreateSectionPopup();
+      } catch (error) {
+        console.error('Error updating section:', error);
+        alert('Error updating section');
+      }
+    } else {
+      alert('Please enter both Section Name and Section Description.');
+    }
+  };
+
+  const handleDeleteSection = async (sectionId) => {
+    try {
+      await deleteSection(sectionId);
+      setSections(sections.filter((section) => section.sectionID !== sectionId));
+    } catch (error) {
+      console.error('Error deleting section:', error);
+      alert('Error deleting section');
+    }
+  };
+
+  // Open the edit section popup and pre-fill the section data
+  const openEditSectionPopup = (section) => {
+    setEditingSection(section); // Set the section being edited
+    setSectionName(section.section_name); // Pre-fill section name
+    setSectionDescription(section.section_description); // Pre-fill section description
+    setIsPopupOpen(true);
   };
 
   return (
@@ -60,80 +115,73 @@ const Dashboard = () => {
       <div className="dashboard-content">
         <header className="dashboard-header">
           <h1>Welcome to Your Dashboard</h1>
-          {/* Cog Icon */}
           <button className="cog-button" onClick={handleCogButtonClick}>
-            <img
-              className="cog-logo"
-              src="/coglogo.png" // Adjusted path for image in the public folder
-              alt="Settings"
-            />
+            <img className="cog-logo" src="/coglogo.png" alt="Settings" />
           </button>
         </header>
-
-
-       <main className="dashboard-main">
-  <div className="dashboard-layout">
-
-      {/* Left Section Container */}
-      <div className="left-section-container">
-    {/* Create Section Container */}
-    <div className="create-section-container">
-      <h2>Create Section</h2>
-      <div className="create-section-container">
-        <button
-          className="create-section-button"
-          onClick={openCreateSectionPopup}
-        >
-          Create Section
-        </button>
-      </div>
-    </div>
-    </div>
-
-    {/* Right Section: My Rooms and My Lessons */}
-    <div className="right-section-container">
-      {/* My Rooms Container */}
-      <div className="my-rooms-container">
-        <h2>My Rooms</h2>
-        <div className="rooms-content">
-          {sections.length > 0 ? (
-            sections.map((section, index) => (
-              <div key={index} className="section-card">
-                <h3>{section.name}</h3>
-                <p>{section.description}</p>
-                <button className="add-student-button">Add Student</button>
-                <button className="edit-section-button">Edit Section</button>
+        <main className="dashboard-main">
+          <div className="dashboard-layout">
+            <div className="left-section-container">
+              <div className="create-section-container">
+                <h2>Create Section</h2>
+                <button className="create-section-button" onClick={openCreateSectionPopup}>
+                  Create Section
+                </button>
               </div>
-            ))
-          ) : (
-            <p>No rooms created yet.</p>
-          )}
-        </div>
-      </div>
+              <div className="fetch-sections-container">
+                <button className="fetch-sections-button" onClick={loadSections} disabled={loading}>
+                  {loading ? 'Loading Sections...' : 'Fetch Sections'}
+                </button>
+              </div>
+            </div>
+            <div className="right-section-container">
+              <div className="my-rooms-container">
+                <h2>My Rooms</h2>
+                <div className="rooms-content">
+                  {sections.length > 0 ? (
+                    sections.map((section) => (
+                      <div key={section.sectionID} className="section-card">
+                        <h3>{section.section_name}</h3>
+                        <p>{section.section_description}</p>
+                        <button className="add-student-button">Add Student</button>
+                        <button
+                          className="edit-section-button"
+                          onClick={() => openEditSectionPopup(section)} // Open edit popup for the selected section
+                        >
+                          Edit Section
+                        </button>
+                        <button
+                          className="delete-section-button"
+                          onClick={() => handleDeleteSection(section.sectionID)}
+                        >
+                          Delete Section
+                        </button>
+                      </div>
+                    ))
+                  ) : (
+                    <p>No sections created yet.</p>
+                  )}
+                </div>
+              </div>
 
-      {/* My Lessons Container */}
-      <div className="my-lessons-container">
-        <h2>My Lessons</h2>
-        <div className="lessons-content">
-          <p>No lessons available yet.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</main>
+              {/* Added My Lessons container */}
+              <div className="my-lessons-container">
+                <h2>My Lessons</h2>
+                <div className="lessons-content">
+                  <p>No lessons available yet.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
 
-        {/* Create Section Popup */}
+        {/* Create/edit section popup */}
         {isPopupOpen && (
           <div className="create-section-popup-overlay">
             <div className="create-section-popup-content">
               <div className="create-section-popup-header">
-                <h3>Create Section</h3>
-                <button
-                  className="close-popup-button"
-                  onClick={closeCreateSectionPopup}
-                >
-                  X
-                </button>
+                <h3>{editingSection ? 'Edit Section' : 'Create Section'}</h3>
+                <button className="close-popup-button" onClick={closeCreateSectionPopup}>X</button>
               </div>
               <div className="create-section-popup-body">
                 <input
@@ -149,32 +197,9 @@ const Dashboard = () => {
                 ></textarea>
                 <button
                   className="create-section-popup-button"
-                  onClick={createSection}
+                  onClick={editingSection ? handleUpdateSection : handleCreateSection}
                 >
-                  Create Section
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Settings Modal */}
-        {isModalOpen && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h2>Settings</h2>
-                <button className="close-button" onClick={handleCloseModal}>
-                  X
-                </button>
-              </div>
-              <div className="modal-body">
-                <p>Settings content goes here.</p>
-                <button
-                  className="logout-button"
-                  onClick={handleLogout}
-                >
-                  Logout
+                  {editingSection ? 'Update Section' : 'Create Section'}
                 </button>
               </div>
             </div>

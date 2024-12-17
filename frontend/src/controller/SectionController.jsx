@@ -15,7 +15,8 @@ export const createSection = async (sectionData) => {
   try {
     const response = await axios.post(`${API_URL}/sections/create`, {
       sectionName: sectionData.sectionName,   
-      sectionDescription: sectionData.sectionDescription, 
+      sectionDescription: sectionData.sectionDescription,
+      teacherID: sectionData.teacherID 
     }, {
       headers: { 'Content-Type': 'application/json' },
     });
