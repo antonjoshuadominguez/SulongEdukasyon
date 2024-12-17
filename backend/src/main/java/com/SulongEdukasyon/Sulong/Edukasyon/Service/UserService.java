@@ -9,13 +9,25 @@ import org.springframework.stereotype.Service;
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.Dto.*;
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.User.UserEntity;
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.User.UserRepo;
+import com.SulongEdukasyon.Sulong.Edukasyon.Models.Teacher.TeacherEntity;
+import com.SulongEdukasyon.Sulong.Edukasyon.Models.Teacher.TeacherRepo;
+import com.SulongEdukasyon.Sulong.Edukasyon.Models.Student.StudentEntity;
+import com.SulongEdukasyon.Sulong.Edukasyon.Models.Student.StudentRepo;
 
 @Service
 public class UserService {
     @Autowired
     public UserRepo userRepo;
+
+    @Autowired
+    public TeacherRepo teacherRepo;
+
+    @Autowired
+    public StudentRepo studentRepo;
+
     @Autowired
     public EmailService emailService;
+
     private String otp;
 
     public ResponseEntity<?> register(RegisterUserDto newUser) {
@@ -38,7 +50,17 @@ public class UserService {
 
             userRepo.save(newUserEntity);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(newUserEntity);
+            if ("teacher".equalsIgnoreCase(newUser.getRole())) {
+                TeacherEntity newTeacher = new TeacherEntity(newUserEntity);  
+                teacherRepo.save(newTeacher);  
+            } else if ("student".equalsIgnoreCase(newUser.getRole())) {
+                StudentEntity newStudent = new StudentEntity(newUserEntity);  
+                studentRepo.save(newStudent);  
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid role. Please specify either 'teacher' or 'student'.");
+            }
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(newUserEntity); 
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
