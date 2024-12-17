@@ -15,12 +15,11 @@ public class SectionService {
     @Autowired
     private SectionRepo sectionRepo;
 
-    public ResponseEntity<SectionEntity> createSection(SectionEntity section) {
-        SectionEntity savedSection = sectionRepo.save(section);
-        return ResponseEntity.ok(savedSection);
+    public SectionEntity createSection(SectionEntity section) {
+        return sectionRepo.save(section);
     }
 
-    public ResponseEntity<SectionEntity> updateSection(long sectionID, SectionEntity section) {
+    public SectionEntity updateSection(long sectionID, SectionEntity section) {
         Optional<SectionEntity> existingSection = sectionRepo.findById(sectionID);
         if (existingSection.isPresent()) {
             SectionEntity updatedSection = existingSection.get();
@@ -28,9 +27,9 @@ public class SectionService {
             updatedSection.setSectionDescription(section.getSectionDescription());
             updatedSection.setTeacher(section.getTeacher());  
             sectionRepo.save(updatedSection);
-            return ResponseEntity.ok(updatedSection);
+            return updatedSection;
         } else {
-            return ResponseEntity.notFound().build();
+            throw new RuntimeException("Section not found");
         }
     }
 
@@ -38,9 +37,9 @@ public class SectionService {
         return sectionRepo.findByTeacher_TeacherID(teacherID);
     }
 
-    public ResponseEntity<SectionEntity> getSectionById(long sectionID) {
+    public SectionEntity getSectionById(long sectionID) {
         Optional<SectionEntity> section = sectionRepo.findById(sectionID);
-        return section.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return section.orElseThrow(() -> new RuntimeException("Section not found"));
     }
 
     public ResponseEntity<String> deleteSection(long sectionID) {
