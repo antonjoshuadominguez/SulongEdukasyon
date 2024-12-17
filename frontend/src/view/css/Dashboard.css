@@ -217,9 +217,12 @@
   color: #007bff;
 }
 
-.section-card p {
-  font-size: 1rem;
-  color: #555;
+.section-card {
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
 }
 
 .section-card button {
@@ -342,4 +345,63 @@
 
 .logout-button:hover {
   background-color: darkblue;
+}
+
+/* New Containers: My Rooms & My Lessons */
+.my-rooms-container,
+.my-lessons-container {
+  background-color: white;
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 1000px;
+  width: 100%;
+  margin: 20px auto;
+}
+
+.my-rooms-container h2,
+.my-lessons-container h2 {
+  font-size: 1.5rem;
+  color: #007bff;
+  margin-bottom: 1rem;
+}
+
+.room-content,
+.lessons-content {
+  font-size: 1rem;
+  color: #555;
+  margin-top: 10px;
+}
+
+.dashboard-layout {
+  display: flex;
+  gap: 20px; /* Space between sections */
+}
+
+.create-section-container {
+  flex: 1; /* Let Create Section take up available space */
+  background-color: white;
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 1000px;
+  width: 100%;
+  margin: 20px auto;
+}
+
+
+.right-section-container {
+  flex: 2; /* My Rooms and My Lessons take up more space */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.left-section-container {
+  flex: 1; /* Left Section takes up equal space as Create Section */
+  background-color: #f9f9f9; /* Optional: Add a background */
+  padding: 20px;
+  border-radius: 8px;
 }

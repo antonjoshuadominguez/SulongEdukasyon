@@ -69,37 +69,58 @@ const Dashboard = () => {
             />
           </button>
         </header>
-        <main className="dashboard-main">
-          <section className="dashboard-section">
-            {/* Username, Role, and Create Section Button */}
-            <div className="dashboard-user-container">
-              <div className="username-display">Teacher</div>
-              <div className="role-display">Teacher</div>
-              <button
-                className="create-section-button"
-                onClick={openCreateSectionPopup}
-              >
-                Create Section
-              </button>
-            </div>
 
-            {/* Display created sections */}
-            <div className="created-sections-container">
-              {sections.length > 0 ? (
-                sections.map((section, index) => (
-                  <div key={index} className="section-card">
-                    <h3>{section.name}</h3>
-                    <p>{section.description}</p>
-                    <button className="add-student-button">Add Student</button>
-                    <button className="edit-section-button">Edit Section</button>
-                  </div>
-                ))
-              ) : (
-                <p>No sections created yet.</p>
-              )}
-            </div>
-          </section>
-        </main>
+
+       <main className="dashboard-main">
+  <div className="dashboard-layout">
+
+      {/* Left Section Container */}
+      <div className="left-section-container">
+    {/* Create Section Container */}
+    <div className="create-section-container">
+      <h2>Create Section</h2>
+      <div className="create-section-container">
+        <button
+          className="create-section-button"
+          onClick={openCreateSectionPopup}
+        >
+          Create Section
+        </button>
+      </div>
+    </div>
+    </div>
+
+    {/* Right Section: My Rooms and My Lessons */}
+    <div className="right-section-container">
+      {/* My Rooms Container */}
+      <div className="my-rooms-container">
+        <h2>My Rooms</h2>
+        <div className="rooms-content">
+          {sections.length > 0 ? (
+            sections.map((section, index) => (
+              <div key={index} className="section-card">
+                <h3>{section.name}</h3>
+                <p>{section.description}</p>
+                <button className="add-student-button">Add Student</button>
+                <button className="edit-section-button">Edit Section</button>
+              </div>
+            ))
+          ) : (
+            <p>No rooms created yet.</p>
+          )}
+        </div>
+      </div>
+
+      {/* My Lessons Container */}
+      <div className="my-lessons-container">
+        <h2>My Lessons</h2>
+        <div className="lessons-content">
+          <p>No lessons available yet.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
 
         {/* Create Section Popup */}
         {isPopupOpen && (
