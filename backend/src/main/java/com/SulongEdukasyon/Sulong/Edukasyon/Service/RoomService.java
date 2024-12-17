@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class RoomService {
@@ -26,78 +25,74 @@ public class RoomService {
     @Autowired
     private StudentRepo studentRepo;
 
-    public ResponseEntity<RoomEntity> createRoom(RoomEntity room) {
-        if (roomRepo.existsByRoomCode(room.getRoomCode())) {
-            return ResponseEntity.badRequest().body(null); 
-        }
-
-        RoomEntity savedRoom = roomRepo.save(room); 
-        return ResponseEntity.ok(savedRoom); 
+    // Create a new room (only teachers can create rooms)
+    public RoomEntity createRoom(RoomEntity roomEntity) {
+        roomEntity.setRoomCode(generateRoomCode()); // Generate room code
+        return roomRepo.save(roomEntity);
     }
 
-    public ResponseEntity<RoomEntity> updateRoom(long roomID, RoomEntity room) {
+    // Update room details (teachers can only update their rooms)
+    public RoomEntity updateRoom(long roomID, RoomEntity roomEntity) {
         Optional<RoomEntity> existingRoom = roomRepo.findById(roomID);
         if (existingRoom.isPresent()) {
             RoomEntity updatedRoom = existingRoom.get();
-            updatedRoom.setRoomName(room.getRoomName());
-            updatedRoom.setRoomDescription(room.getRoomDescription());
-            updatedRoom.setRoomCode(room.getRoomCode()); 
-            roomRepo.save(updatedRoom); 
-            return ResponseEntity.ok(updatedRoom); 
-        } else {
-            return ResponseEntity.notFound().build(); 
+            updatedRoom.setRoomName(roomEntity.getRoomName());
+            updatedRoom.setRoomDescription(roomEntity.getRoomDescription());
+            return roomRepo.save(updatedRoom);
         }
+        return null;  // Return null if room not found
     }
 
+    // Fetch all rooms created by a teacher
     public List<RoomEntity> getRoomsByTeacher(long teacherID) {
-        return roomRepo.findByTeacher_TeacherID(teacherID); 
+        return roomRepo.findByTeacher_TeacherID(teacherID);
     }
 
-    public List<RoomEntity> getRoomsByStudent(long studentID) {
-        List<StudentRoomEntity> studentRooms = studentRoomRepo.findByStudentStudentID(studentID); 
-        return studentRooms.stream()
-                           .map(StudentRoomEntity::getRoom) 
-                           .collect(Collectors.toList()); 
+    // Fetch a room by its unique ID
+    public RoomEntity getRoomById(long roomID) {
+        return roomRepo.findById(roomID).orElse(null);
     }
 
-    public ResponseEntity<RoomEntity> getRoomByCode(String roomCode) {
-        Optional<RoomEntity> room = roomRepo.findByRoomCode(roomCode);
-        return room.map(ResponseEntity::ok) 
-                   .orElseGet(() -> ResponseEntity.notFound().build()); 
+    // Fetch a room by its code (for students to join)
+    public RoomEntity getRoomByCode(String roomCode) {
+        Optional<RoomEntity> roomOptional = roomRepo.findByRoomCode(roomCode);
+        return roomOptional.orElse(null);  // Return the RoomEntity if present, otherwise null
     }
 
+    // Delete a room (only teachers can delete their rooms)
     public ResponseEntity<String> deleteRoom(long roomID) {
         Optional<RoomEntity> room = roomRepo.findById(roomID);
         if (room.isPresent()) {
-            roomRepo.delete(room.get()); 
-            return ResponseEntity.ok("Room deleted successfully."); 
-        } else {
-            return ResponseEntity.notFound().build(); 
+            roomRepo.delete(room.get());
+            return ResponseEntity.ok("Room deleted successfully.");
         }
+        return ResponseEntity.status(404).body("Room not found.");
     }
 
-    public ResponseEntity<StudentRoomEntity> joinRoom(String roomCode, Long studentID) {
-        Optional<RoomEntity> roomOpt = roomRepo.findByRoomCode(roomCode);
-        if (!roomOpt.isPresent()) {
-            return ResponseEntity.badRequest().body(null); 
+    // Add a student to a room
+    public void addStudentToRoom(StudentRoomEntity studentRoomEntity) {
+        studentRoomRepo.save(studentRoomEntity);
+    }
+
+    // Remove a student from a room
+    public boolean removeStudentFromRoom(String roomCode, long studentID) {
+        Optional<RoomEntity> roomOptional = roomRepo.findByRoomCode(roomCode);
+        if (roomOptional.isPresent()) {
+            RoomEntity room = roomOptional.get();
+            Optional<StudentEntity> studentEntity = studentRepo.findById(studentID);
+            if (studentEntity.isPresent()) {
+                Optional<StudentRoomEntity> studentRoom = studentRoomRepo.findByRoomAndStudent(room, studentEntity.get());
+                if (studentRoom.isPresent()) {
+                    studentRoomRepo.delete(studentRoom.get());
+                    return true;  // Successfully removed the student from the room
+                }
+            }
         }
+        return false;  // Return false if no student-room match was found
+    }
 
-        RoomEntity room = roomOpt.get();
-
-        Optional<StudentEntity> studentOpt = studentRepo.findById(studentID);
-        if (!studentOpt.isPresent()) {
-            return ResponseEntity.badRequest().body(null); 
-        }
-
-        StudentEntity student = studentOpt.get();
-
-        StudentRoomEntity studentRoom = new StudentRoomEntity();
-        studentRoom.setRoom(room);
-        studentRoom.setStudent(student);
-        studentRoom.setEnrollmentDate("CURRENT_DATE"); 
-
-        StudentRoomEntity savedStudentRoom = studentRoomRepo.save(studentRoom); 
-
-        return ResponseEntity.ok(savedStudentRoom); 
+    // Helper method to generate a random room code
+    private String generateRoomCode() {
+        return java.util.UUID.randomUUID().toString().substring(0, 6); // Example room code
     }
 }
