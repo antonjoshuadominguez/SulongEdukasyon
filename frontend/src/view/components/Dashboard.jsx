@@ -11,6 +11,7 @@ const Dashboard = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [editingSection, setEditingSection] = useState(null); // Track the section being edited
+  const [myLessons, setMyLessons] = useState([]);  // New state to store lessons
   const teacherId = 1;
 
   // Function to fetch sections when the button is clicked
@@ -24,6 +25,16 @@ const Dashboard = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Fetch lessons for the teacher
+  const loadLessons = () => {
+    // You can implement a function to fetch lessons or assign mock data for now
+    const fetchedLessons = [
+      { id: 1, name: "Math Lesson 1" },
+      { id: 2, name: "English Lesson 1" },
+    ];
+    setMyLessons(fetchedLessons);
   };
 
   const handleCogButtonClick = () => {
@@ -168,6 +179,26 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="right-section-container">
+              {/* My Lessons Section */}
+              <div className="my-lessons-container">
+                <h2>My Lessons</h2>
+                <button className="fetch-lessons-button" onClick={loadLessons}>
+                  Load Lessons
+                </button>
+                <div className="lessons-content">
+                  {myLessons.length > 0 ? (
+                    myLessons.map((lesson) => (
+                      <div key={lesson.id} className="lesson-card">
+                        <h3>{lesson.name}</h3>
+                      </div>
+                    ))
+                  ) : (
+                    <p>No lessons available.</p>
+                  )}
+                </div>
+              </div>
+
+              {/* My Rooms */}
               <div className="my-rooms-container">
                 <h2>My Rooms</h2>
                 <div className="rooms-content">

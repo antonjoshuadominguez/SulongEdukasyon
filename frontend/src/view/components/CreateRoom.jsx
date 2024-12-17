@@ -1,23 +1,49 @@
-import React, { useState } from "react";
-import { Container, Box, Typography, Button, TextField } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Container, Box, Typography, Button, TextField, Snackbar, Alert } from "@mui/material";
 import Sidebar from "../components/Sidebar";
+import { createRoom, fetchRoomsByTeacher } from '../../controller/RoomController';  // Import backend API logic for creating and fetching rooms
 import "../css/createroom.css";
 
 const CreateRoom = () => {
   const [roomName, setRoomName] = useState("");
   const [roomDescription, setRoomDescription] = useState("");
-  const [roomCode, setRoomCode] = useState("");
+  const [rooms, setRooms] = useState([]); // To store rooms created by the teacher
   const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleCreateRoom = () => {
-    // Handle room creation logic here
-    console.log({
-      roomName,
-      roomDescription,
-      roomCode,
-    });
+  const teacherID = 1;  // Replace this with the actual teacher ID
+
+  useEffect(() => {
+    fetchTeacherRooms();
+  }, [teacherID]); // Fetch rooms whenever the teacher ID changes
+
+  // Fetch rooms created by the teacher
+  const fetchTeacherRooms = async () => {
+    try {
+      const fetchedRooms = await fetchRoomsByTeacher(teacherID);
+      setRooms(fetchedRooms);
+    } catch (error) {
+      setErrorMessage("Error fetching rooms.");
+    }
   };
 
+  const handleCreateRoom = async () => {
+    // Validate form before making API request
+    if (validateForm()) {
+      try {
+        const roomData = { roomName, roomDescription, teacherID };
+        const newRoom = await createRoom(roomData);
+        setSuccessMessage(`Room created successfully with code: ${newRoom.roomCode}`);
+        resetForm();
+        fetchTeacherRooms(); // Re-fetch rooms after successful creation
+      } catch (error) {
+        setErrorMessage("Error creating room. Please try again.");
+      }
+    }
+  };
+
+  // Validate the form inputs
   const validateForm = () => {
     const newErrors = {};
 
@@ -29,12 +55,15 @@ const CreateRoom = () => {
       newErrors.roomDescription = "Room description is required";
     }
 
-    if (!roomCode.trim()) {
-      newErrors.roomCode = "Room code is required";
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  // Reset form after successful creation
+  const resetForm = () => {
+    setRoomName("");
+    setRoomDescription("");
+    setErrors({});
   };
 
   return (
@@ -52,7 +81,7 @@ const CreateRoom = () => {
             padding: "10px",
           }}
         >
-          <Button variant="contained" color="primary">
+          <Button variant="contained" color="primary" onClick={fetchTeacherRooms}>
             My Rooms
           </Button>
         </Box>
@@ -68,7 +97,7 @@ const CreateRoom = () => {
             right: "10px",
           }}
         >
-          <Button variant="contained" color="primary">
+          <Button variant="contained" color="primary" onClick={fetchTeacherRooms}>
             My Rooms
           </Button>
         </Box>
@@ -112,15 +141,6 @@ const CreateRoom = () => {
               fullWidth
               margin="normal"
             />
-            <TextField
-              label="Room Code"
-              value={roomCode}
-              onChange={(e) => setRoomCode(e.target.value)}
-              error={!!errors.roomCode}
-              helperText={errors.roomCode}
-              fullWidth
-              margin="normal"
-            />
           </Box>
 
           {/* 4 Pics 1 Word and Drawing Questions */}
@@ -150,13 +170,6 @@ const CreateRoom = () => {
               >
                 4 Pics 1 Word Questions
               </Typography>
-              <Box
-                sx={{
-                  padding: "10px", // Removed backgroundColor
-                  borderRadius: "8px",
-                }}
-              >
-              </Box>
               <Button
                 variant="contained"
                 sx={{ display: "block", margin: "20px auto 0" }}
@@ -183,13 +196,6 @@ const CreateRoom = () => {
               >
                 Drawing Questions
               </Typography>
-              <Box
-                sx={{
-                  padding: "10px", // Removed backgroundColor
-                  borderRadius: "8px",
-                }}
-              >
-              </Box>
               <Button
                 variant="contained"
                 sx={{ display: "block", margin: "20px auto 0" }}
@@ -204,14 +210,37 @@ const CreateRoom = () => {
             <Button
               variant="contained"
               sx={{ padding: "10px 20px" }}
-              onClick={() => {
-                if (validateForm()) {
-                  handleCreateRoom();
-                }
-              }}
+              onClick={handleCreateRoom}
             >
               Create Room
             </Button>
+          </Box>
+
+          {/* Success or Error Message */}
+          {successMessage && (
+            <Snackbar open={true} autoHideDuration={6000}>
+              <Alert severity="success">{successMessage}</Alert>
+            </Snackbar>
+          )}
+          {errorMessage && (
+            <Snackbar open={true} autoHideDuration={6000}>
+              <Alert severity="error">{errorMessage}</Alert>
+            </Snackbar>
+          )}
+
+          {/* Display created rooms */}
+          <Box sx={{ marginTop: "20px" }}>
+            <Typography variant="h6">Created Rooms:</Typography>
+            {rooms.length > 0 ? (
+              rooms.map((room) => (
+                <Box key={room.roomID} sx={{ marginBottom: "10px" }}>
+                  <Typography variant="body1">{room.roomName}</Typography>
+                  <Typography variant="body2">{room.roomDescription}</Typography>
+                </Box>
+              ))
+            ) : (
+              <Typography>No rooms created yet.</Typography>
+            )}
           </Box>
         </Container>
       </div>
