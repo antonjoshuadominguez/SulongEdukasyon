@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ActivityResultRepo extends JpaRepository<ActivityResultEntity, Long> {
-    ActivityResultEntity findByStudentStudentIdAndActivityActivityId(long studentId, long activityId);
+    ActivityResultEntity findByStudentStudentIDAndActivityActivityID(long studentID, long activityID);
 }

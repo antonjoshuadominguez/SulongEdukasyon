@@ -14,13 +14,13 @@ public class LessonEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long lessonId;
+    private long lessonID;
 
     private String lessonTitle;
     private String lessonContent;
 
     @ManyToOne
-    @JoinColumn(name = "teacher_id", nullable = false)
+    @JoinColumn(name = "teacherID", nullable = false)
     private TeacherEntity teacher;
 
     private int studentsCurrentlyHere;

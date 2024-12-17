@@ -15,14 +15,14 @@ public class StudentSectionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
-    private Long studentSectionId;
+    private Long studentSectionID;
 
     @ManyToOne
-    @JoinColumn(name = "section_id", nullable = false)  
+    @JoinColumn(name = "sectionID", nullable = false)  
     private SectionEntity section;
 
     @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false)  
+    @JoinColumn(name = "studentID", nullable = false)  
     private StudentEntity student;
 
     private String enrollmentDate;

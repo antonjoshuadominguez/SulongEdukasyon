@@ -15,20 +15,18 @@ public class SectionService {
     @Autowired
     private SectionRepo sectionRepo;
 
-    // Create section
     public ResponseEntity<SectionEntity> createSection(SectionEntity section) {
         SectionEntity savedSection = sectionRepo.save(section);
         return ResponseEntity.ok(savedSection);
     }
 
-    // Update section
-    public ResponseEntity<SectionEntity> updateSection(long sectionId, SectionEntity section) {
-        Optional<SectionEntity> existingSection = sectionRepo.findById(sectionId);
+    public ResponseEntity<SectionEntity> updateSection(long sectionID, SectionEntity section) {
+        Optional<SectionEntity> existingSection = sectionRepo.findById(sectionID);
         if (existingSection.isPresent()) {
             SectionEntity updatedSection = existingSection.get();
             updatedSection.setSectionName(section.getSectionName());
             updatedSection.setSectionDescription(section.getSectionDescription());
-            updatedSection.setTeacher(section.getTeacher());  // Assuming you're passing a teacher
+            updatedSection.setTeacher(section.getTeacher());  
             sectionRepo.save(updatedSection);
             return ResponseEntity.ok(updatedSection);
         } else {
@@ -36,20 +34,17 @@ public class SectionService {
         }
     }
 
-    // Get sections by teacher ID
-    public List<SectionEntity> getSectionsByTeacher(long teacherId) {
-        return sectionRepo.findByTeacher_TeacherId(teacherId);
+    public List<SectionEntity> getSectionsByTeacher(long teacherID) {
+        return sectionRepo.findByTeacher_TeacherID(teacherID);
     }
 
-    // Get section by ID
-    public ResponseEntity<SectionEntity> getSectionById(long sectionId) {
-        Optional<SectionEntity> section = sectionRepo.findById(sectionId);
+    public ResponseEntity<SectionEntity> getSectionById(long sectionID) {
+        Optional<SectionEntity> section = sectionRepo.findById(sectionID);
         return section.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Delete section
-    public ResponseEntity<String> deleteSection(long sectionId) {
-        Optional<SectionEntity> section = sectionRepo.findById(sectionId);
+    public ResponseEntity<String> deleteSection(long sectionID) {
+        Optional<SectionEntity> section = sectionRepo.findById(sectionID);
         if (section.isPresent()) {
             sectionRepo.delete(section.get());
             return ResponseEntity.ok("Section deleted successfully.");

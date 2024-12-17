@@ -26,74 +26,67 @@ public class RoomService {
     @Autowired
     private StudentRepo studentRepo;
 
-    // Create room
     public ResponseEntity<RoomEntity> createRoom(RoomEntity room) {
         if (roomRepo.existsByRoomCode(room.getRoomCode())) {
-            return ResponseEntity.badRequest().body(null); // Room code already exists
+            return ResponseEntity.badRequest().body(null); 
         }
 
-        RoomEntity savedRoom = roomRepo.save(room); // Save the new room
-        return ResponseEntity.ok(savedRoom); // Return saved room
+        RoomEntity savedRoom = roomRepo.save(room); 
+        return ResponseEntity.ok(savedRoom); 
     }
 
-    // Update room
-    public ResponseEntity<RoomEntity> updateRoom(long roomId, RoomEntity room) {
-        Optional<RoomEntity> existingRoom = roomRepo.findById(roomId);
+    public ResponseEntity<RoomEntity> updateRoom(long roomID, RoomEntity room) {
+        Optional<RoomEntity> existingRoom = roomRepo.findById(roomID);
         if (existingRoom.isPresent()) {
             RoomEntity updatedRoom = existingRoom.get();
             updatedRoom.setRoomName(room.getRoomName());
             updatedRoom.setRoomDescription(room.getRoomDescription());
-            updatedRoom.setRoomCode(room.getRoomCode()); // Room code can be updated if needed
-            roomRepo.save(updatedRoom); // Save updated room
-            return ResponseEntity.ok(updatedRoom); // Return updated room
+            updatedRoom.setRoomCode(room.getRoomCode()); 
+            roomRepo.save(updatedRoom); 
+            return ResponseEntity.ok(updatedRoom); 
         } else {
-            return ResponseEntity.notFound().build(); // Return not found if room doesn't exist
+            return ResponseEntity.notFound().build(); 
         }
     }
 
-    // Get all rooms for a teacher
-    public List<RoomEntity> getRoomsByTeacher(long teacherId) {
-        return roomRepo.findByTeacher_TeacherId(teacherId); // Fetch rooms for specific teacher
+    public List<RoomEntity> getRoomsByTeacher(long teacherID) {
+        return roomRepo.findByTeacher_TeacherID(teacherID); 
     }
 
-    // Get all rooms that a student has joined
-    public List<RoomEntity> getRoomsByStudent(long studentId) {
-        List<StudentRoomEntity> studentRooms = studentRoomRepo.findByStudentStudentId(studentId); // Fetch student-room relationships
+    public List<RoomEntity> getRoomsByStudent(long studentID) {
+        List<StudentRoomEntity> studentRooms = studentRoomRepo.findByStudentStudentID(studentID); 
         return studentRooms.stream()
-                           .map(StudentRoomEntity::getRoom) // Map to RoomEntity objects
-                           .collect(Collectors.toList()); // Collect into a list of rooms
+                           .map(StudentRoomEntity::getRoom) 
+                           .collect(Collectors.toList()); 
     }
 
-    // Get room by room code (for students to join)
     public ResponseEntity<RoomEntity> getRoomByCode(String roomCode) {
         Optional<RoomEntity> room = roomRepo.findByRoomCode(roomCode);
-        return room.map(ResponseEntity::ok) // If room found, return it
-                   .orElseGet(() -> ResponseEntity.notFound().build()); // Return not found if room doesn't exist
+        return room.map(ResponseEntity::ok) 
+                   .orElseGet(() -> ResponseEntity.notFound().build()); 
     }
 
-    // Delete room
-    public ResponseEntity<String> deleteRoom(long roomId) {
-        Optional<RoomEntity> room = roomRepo.findById(roomId);
+    public ResponseEntity<String> deleteRoom(long roomID) {
+        Optional<RoomEntity> room = roomRepo.findById(roomID);
         if (room.isPresent()) {
-            roomRepo.delete(room.get()); // Delete room if exists
-            return ResponseEntity.ok("Room deleted successfully."); // Return success message
+            roomRepo.delete(room.get()); 
+            return ResponseEntity.ok("Room deleted successfully."); 
         } else {
-            return ResponseEntity.notFound().build(); // Return not found if room doesn't exist
+            return ResponseEntity.notFound().build(); 
         }
     }
 
-    // Join room (Student enrolls into a room using the room code)
-    public ResponseEntity<StudentRoomEntity> joinRoom(String roomCode, Long studentId) {
+    public ResponseEntity<StudentRoomEntity> joinRoom(String roomCode, Long studentID) {
         Optional<RoomEntity> roomOpt = roomRepo.findByRoomCode(roomCode);
         if (!roomOpt.isPresent()) {
-            return ResponseEntity.badRequest().body(null); // Room not found
+            return ResponseEntity.badRequest().body(null); 
         }
 
         RoomEntity room = roomOpt.get();
 
-        Optional<StudentEntity> studentOpt = studentRepo.findById(studentId);
+        Optional<StudentEntity> studentOpt = studentRepo.findById(studentID);
         if (!studentOpt.isPresent()) {
-            return ResponseEntity.badRequest().body(null); // Student not found
+            return ResponseEntity.badRequest().body(null); 
         }
 
         StudentEntity student = studentOpt.get();
@@ -101,10 +94,10 @@ public class RoomService {
         StudentRoomEntity studentRoom = new StudentRoomEntity();
         studentRoom.setRoom(room);
         studentRoom.setStudent(student);
-        studentRoom.setEnrollmentDate("CURRENT_DATE"); // Enrollment date, could be changed to actual date if needed
+        studentRoom.setEnrollmentDate("CURRENT_DATE"); 
 
-        StudentRoomEntity savedStudentRoom = studentRoomRepo.save(studentRoom); // Save student-room relationship
+        StudentRoomEntity savedStudentRoom = studentRoomRepo.save(studentRoom); 
 
-        return ResponseEntity.ok(savedStudentRoom); // Return saved student-room relationship
+        return ResponseEntity.ok(savedStudentRoom); 
     }
 }

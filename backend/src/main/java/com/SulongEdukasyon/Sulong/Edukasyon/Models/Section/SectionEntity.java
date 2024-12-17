@@ -1,7 +1,7 @@
 package com.SulongEdukasyon.Sulong.Edukasyon.Models.Section;
 
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.Teacher.TeacherEntity;
-import com.SulongEdukasyon.Sulong.Edukasyon.Models.StudentSection.StudentSectionEntity;  // Import StudentSectionEntity
+import com.SulongEdukasyon.Sulong.Edukasyon.Models.StudentSection.StudentSectionEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,16 +17,16 @@ public class SectionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long sectionId;
+    private long sectionID;
 
     private String sectionName;
     private String sectionDescription;
 
     @ManyToOne
-    @JoinColumn(name = "teacher_id", nullable = false)
+    @JoinColumn(name = "teacherID", nullable = false)
     private TeacherEntity teacher;
 
-    @OneToMany(mappedBy = "section") 
+    @OneToMany(mappedBy = "section")
     private Set<StudentSectionEntity> studentSections;  
 
     public SectionEntity(String sectionName, String sectionDescription, TeacherEntity teacher) {

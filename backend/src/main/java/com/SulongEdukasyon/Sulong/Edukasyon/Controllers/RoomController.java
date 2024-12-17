@@ -17,45 +17,38 @@ public class RoomController {
     @Autowired
     private RoomService roomService;
 
-    // Create new room
     @PostMapping("/create")
     public ResponseEntity<RoomEntity> createRoom(@RequestBody RoomEntity room) {
         return roomService.createRoom(room);
     }
 
-    // Update an existing room
-    @PutMapping("/update/{roomId}")
-    public ResponseEntity<RoomEntity> updateRoom(@PathVariable long roomId, @RequestBody RoomEntity room) {
-        return roomService.updateRoom(roomId, room);
+    @PutMapping("/update/{roomID}")
+    public ResponseEntity<RoomEntity> updateRoom(@PathVariable long roomID, @RequestBody RoomEntity room) {
+        return roomService.updateRoom(roomID, room);
     }
 
-    // Get all rooms for a specific teacher
-    @GetMapping("/teacher/{teacherId}")
-    public ResponseEntity<List<RoomEntity>> getRoomsByTeacher(@PathVariable long teacherId) {
-        return ResponseEntity.ok(roomService.getRoomsByTeacher(teacherId));
+    @GetMapping("/teacher/{teacherID}")
+    public ResponseEntity<List<RoomEntity>> getRoomsByTeacher(@PathVariable long teacherID) {
+        return ResponseEntity.ok(roomService.getRoomsByTeacher(teacherID));
     }
 
-    // Get all rooms that a student has joined
-    @GetMapping("/student/{studentId}")
-    public ResponseEntity<List<RoomEntity>> getRoomsByStudent(@PathVariable long studentId) {
-        return ResponseEntity.ok(roomService.getRoomsByStudent(studentId));
+    @GetMapping("/student/{studentID}")
+    public ResponseEntity<List<RoomEntity>> getRoomsByStudent(@PathVariable long studentID) {
+        return ResponseEntity.ok(roomService.getRoomsByStudent(studentID));
     }
 
-    // Get room by room code (for students to join)
     @GetMapping("/get/{roomCode}")
     public ResponseEntity<RoomEntity> getRoomByCode(@PathVariable String roomCode) {
         return roomService.getRoomByCode(roomCode);
     }
 
-    // Delete a room (Assuming a teacher can delete a room they created)
-    @DeleteMapping("/delete/{roomId}")
-    public ResponseEntity<String> deleteRoom(@PathVariable long roomId) {
-        return roomService.deleteRoom(roomId);
+    @DeleteMapping("/delete/{roomID}")
+    public ResponseEntity<String> deleteRoom(@PathVariable long roomID) {
+        return roomService.deleteRoom(roomID);
     }
 
-    // Join room (Student enrolls into a room using the room code)
     @PostMapping("/join")
-    public ResponseEntity<StudentRoomEntity> joinRoom(@RequestParam String roomCode, @RequestParam Long studentId) {
-        return roomService.joinRoom(roomCode, studentId);
+    public ResponseEntity<StudentRoomEntity> joinRoom(@RequestParam String roomCode, @RequestParam Long studentID) {
+        return roomService.joinRoom(roomCode, studentID);
     }
 }

@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SubmissionRepo extends JpaRepository<SubmissionEntity, Long> {
-    SubmissionEntity findByStudentStudentIdAndActivityActivityId(long studentId, long activityId);  // Find a submission by student and activity
+    SubmissionEntity findByStudentStudentIDAndActivityActivityID(long studentID, long activityID);
 }

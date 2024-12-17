@@ -14,15 +14,15 @@ import lombok.*;
 public class StudentRoomEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) 
-    private Long studentRoomId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long studentRoomID;
 
     @ManyToOne
-    @JoinColumn(name = "room_id", nullable = false)  
+    @JoinColumn(name = "roomID", nullable = false)
     private RoomEntity room;
 
     @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false)  
+    @JoinColumn(name = "studentID", nullable = false)
     private StudentEntity student;
 
     private String enrollmentDate;

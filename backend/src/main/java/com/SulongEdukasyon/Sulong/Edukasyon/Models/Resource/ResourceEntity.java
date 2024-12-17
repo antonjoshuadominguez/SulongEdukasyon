@@ -10,31 +10,31 @@ import lombok.*;
 @Table(name = "resources", schema = "public")
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter 
+@Getter
 @Setter
 public class ResourceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long resourceId;
+    private long resourceID;
 
     private String resourceTitle;
-    private String resourceType; // (e.g., article, video, image, PDF)
-    private String resourceLink; // URL or path to the resource
+    private String resourceType;
+    private String resourceLink;
 
     @ManyToOne
-    @JoinColumn(name = "lesson_id", nullable = true)
+    @JoinColumn(name = "lessonID", nullable = true)
     private LessonEntity lesson;
 
     @ManyToOne
-    @JoinColumn(name = "topic_id", nullable = true)
+    @JoinColumn(name = "topicID", nullable = true)
     private TopicEntity topic;
 
     @ManyToOne
-    @JoinColumn(name = "created_by", nullable = false)
+    @JoinColumn(name = "createdBy", nullable = false)
     private TeacherEntity createdBy;
 
-    private String createdAt; // Timestamp of when the resource was added
+    private String createdAt;
 
     public ResourceEntity(String resourceTitle, String resourceType, String resourceLink, LessonEntity lesson, TopicEntity topic, TeacherEntity createdBy, String createdAt) {
         this.resourceTitle = resourceTitle;

@@ -10,24 +10,24 @@ import lombok.*;
 @Table(name = "activities", schema = "public")
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter 
+@Getter
 @Setter
 public class ActivityEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long activityId;
+    private long activityID;
 
     @ManyToOne
-    @JoinColumn(name = "teacher_id", nullable = false)
+    @JoinColumn(name = "teacherID", nullable = false)
     private TeacherEntity teacher;
 
     @ManyToOne
-    @JoinColumn(name = "lesson_id", nullable = true)
+    @JoinColumn(name = "lessonID", nullable = true)
     private LessonEntity lesson;
 
     @ManyToOne
-    @JoinColumn(name = "topic_id", nullable = true)
+    @JoinColumn(name = "topicID", nullable = true)
     private TopicEntity topic;
 
     private String instruction;

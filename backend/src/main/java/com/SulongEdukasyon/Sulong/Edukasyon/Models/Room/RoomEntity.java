@@ -14,14 +14,14 @@ public class RoomEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long roomId;
+    private long roomID;
 
     private String roomName;
     private String roomDescription;
     private String roomCode;
 
     @ManyToOne
-    @JoinColumn(name = "teacher_id", nullable = false)
+    @JoinColumn(name = "teacherID", nullable = false)
     private TeacherEntity teacher;
 
     public RoomEntity(String roomName, String roomDescription, String roomCode, TeacherEntity teacher) {

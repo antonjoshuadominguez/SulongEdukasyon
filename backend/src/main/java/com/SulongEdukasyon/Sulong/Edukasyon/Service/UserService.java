@@ -33,11 +33,11 @@ public class UserService {
         return userRepo.findAll();
     }
 
-    public ResponseEntity<?> getUserById(long id) {
-        if (!userRepo.existsById(id)) {
+    public ResponseEntity<?> getUserById(long userID) {
+        if (!userRepo.existsById(userID)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid User ID. No user found");
         }
-        return ResponseEntity.ok(userRepo.findById(id).get());
+        return ResponseEntity.ok(userRepo.findById(userID).get());
     }
 
     public ResponseEntity<?> login(LoginDto loginCredentials) {
@@ -49,7 +49,7 @@ public class UserService {
         if (!encoder.matches(loginCredentials.getPassword(), user.getPassword())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid password. Please try again.");
         }
-        return ResponseEntity.ok(userRepo.findById(user.getUserId()).get());
+        return ResponseEntity.ok(userRepo.findById(user.getUserID()).get());
     }
 
     public ResponseEntity<String> forgetPassword(String email) {
@@ -77,10 +77,10 @@ public class UserService {
     }
 
     public ResponseEntity<?> updateUser(UpdateUserDto updatedInfo) {
-        if (!userRepo.existsById(updatedInfo.getUserId())) {
+        if (!userRepo.existsById(updatedInfo.getUserID())) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid user ID. No account is associated with this user ID");
         }
-        UserEntity user = userRepo.findById(updatedInfo.getUserId()).get();
+        UserEntity user = userRepo.findById(updatedInfo.getUserID()).get();
         if (!updatedInfo.getEmail().equals(user.getEmail())) {
             if (userRepo.findByEmail(updatedInfo.getEmail()) != null) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Invalid email. Email is already taken.");
@@ -107,11 +107,11 @@ public class UserService {
         return ResponseEntity.ok("Successfully changed password.");
     }
 
-    public ResponseEntity<String> deleteUser(Long userId) {
-        if (!userRepo.existsById(userId)) {
+    public ResponseEntity<String> deleteUser(Long userID) {
+        if (!userRepo.existsById(userID)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid user ID. No account is associated with this user ID");
         }
-        UserEntity user = userRepo.findById(userId).get();
+        UserEntity user = userRepo.findById(userID).get();
         userRepo.delete(user);
         return ResponseEntity.ok("Successfully deleted: " + user.getEmail());
     }

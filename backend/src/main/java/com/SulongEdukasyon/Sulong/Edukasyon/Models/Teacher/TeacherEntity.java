@@ -5,7 +5,7 @@ import com.SulongEdukasyon.Sulong.Edukasyon.Models.Room.RoomEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Set;  
+import java.util.Set;
 
 @Entity
 @Table(name = "teachers", schema = "public")
@@ -17,10 +17,10 @@ public class TeacherEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long teacherId;
+    private long teacherID;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "userID", nullable = false)
     private UserEntity user;
 
     @OneToMany(mappedBy = "teacher")

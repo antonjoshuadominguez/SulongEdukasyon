@@ -15,14 +15,14 @@ public class LeaderboardEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long leaderboardId;
+    private long leaderboardID;
 
     @ManyToOne
-    @JoinColumn(name = "room_id", nullable = false)
+    @JoinColumn(name = "roomID", nullable = false)
     private RoomEntity room;
 
     @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false)
+    @JoinColumn(name = "studentID", nullable = false)
     private StudentEntity student;
 
     private double totalScore;

@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ResourceRepo extends JpaRepository<ResourceEntity, Long> {
-    ResourceEntity findByResourceTitle(String resourceTitle);  // Find a resource by its title
+    ResourceEntity findByResourceTitle(String resourceTitle);
 }

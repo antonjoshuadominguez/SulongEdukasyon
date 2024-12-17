@@ -14,23 +14,23 @@ public class TopicEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long topicId;
+    private long topicID;
 
     private String topicTitle;
 
     @ManyToOne
-    @JoinColumn(name = "lesson_id", nullable = false)
+    @JoinColumn(name = "lessonID", nullable = false)
     private LessonEntity lesson;
 
     private String topicDescription;
     private int studentsCurrentlyHere;
 
-    private String videoUrl; 
+    private String videoURL;
 
-    public TopicEntity(String topicTitle, LessonEntity lesson, String topicDescription, String videoUrl) {
+    public TopicEntity(String topicTitle, LessonEntity lesson, String topicDescription, String videoURL) {
         this.topicTitle = topicTitle;
         this.lesson = lesson;
         this.topicDescription = topicDescription;
-        this.videoUrl = videoUrl;
+        this.videoURL = videoURL;
     }
 }

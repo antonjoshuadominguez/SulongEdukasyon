@@ -8,21 +8,21 @@ import lombok.*;
 @Table(name = "questions", schema = "public")
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter 
+@Getter
 @Setter
 public class QuestionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long questionId;
+    private long questionID;
 
     @ManyToOne
-    @JoinColumn(name = "activity_id", nullable = false)
+    @JoinColumn(name = "activityID", nullable = false)
     private ActivityEntity activity;
 
     private String questionText;
-    private String questionType;  // (e.g., multiple choice, true/false, etc.)
-    private String choices;  // Can store options as a JSON or comma-separated values
+    private String questionType;
+    private String choices;
     private String correctAnswer;
 
     public QuestionEntity(ActivityEntity activity, String questionText, String questionType, String choices, String correctAnswer) {

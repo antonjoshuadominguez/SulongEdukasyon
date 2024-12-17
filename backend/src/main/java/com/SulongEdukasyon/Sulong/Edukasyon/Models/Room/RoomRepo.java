@@ -13,6 +13,5 @@ public interface RoomRepo extends JpaRepository<RoomEntity, Long> {
 
     boolean existsByRoomCode(String roomCode);
 
-    // Find rooms by teacher ID
-    List<RoomEntity> findByTeacher_TeacherId(long teacherId);
+    List<RoomEntity> findByTeacher_TeacherID(long teacherID);
 }

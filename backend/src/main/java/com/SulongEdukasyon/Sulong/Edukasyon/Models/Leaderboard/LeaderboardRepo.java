@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LeaderboardRepo extends JpaRepository<LeaderboardEntity, Long> {
-    LeaderboardEntity findByRoomRoomIdAndStudentStudentId(long roomId, long studentId);
+    LeaderboardEntity findByRoomRoomIDAndStudentStudentID(long roomID, long studentID);
 }

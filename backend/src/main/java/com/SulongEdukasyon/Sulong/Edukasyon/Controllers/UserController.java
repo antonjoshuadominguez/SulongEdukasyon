@@ -50,13 +50,13 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @GetMapping("/get/{userId}")
-    public ResponseEntity<?> getUser(long userId) {
-        return userService.getUserById(userId);
+    @GetMapping("/get/{userID}")
+    public ResponseEntity<?> getUser(@PathVariable long userID) {
+        return userService.getUserById(userID);
     }
 
-    @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<String> deleteUser(@RequestParam(required = true) long userId) {
-        return userService.deleteUser(userId);
+    @DeleteMapping("/delete/{userID}")
+    public ResponseEntity<String> deleteUser(@PathVariable long userID) {
+        return userService.deleteUser(userID);
     }
 }

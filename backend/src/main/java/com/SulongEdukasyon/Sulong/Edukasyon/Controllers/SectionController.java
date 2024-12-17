@@ -16,33 +16,28 @@ public class SectionController {
     @Autowired
     private SectionService sectionService;
 
-    // Create new section
     @PostMapping("/create")
     public ResponseEntity<SectionEntity> createSection(@RequestBody SectionEntity section) {
         return sectionService.createSection(section);
     }
 
-    // Update an existing section
-    @PutMapping("/update/{sectionId}")
-    public ResponseEntity<SectionEntity> updateSection(@PathVariable long sectionId, @RequestBody SectionEntity section) {
-        return sectionService.updateSection(sectionId, section);
+    @PutMapping("/update/{sectionID}")
+    public ResponseEntity<SectionEntity> updateSection(@PathVariable long sectionID, @RequestBody SectionEntity section) {
+        return sectionService.updateSection(sectionID, section);
     }
 
-    // Get all sections for a specific teacher (added teacherId filter)
-    @GetMapping("/teacher/{teacherId}")
-    public ResponseEntity<List<SectionEntity>> getSectionsByTeacher(@PathVariable long teacherId) {
-        return ResponseEntity.ok(sectionService.getSectionsByTeacher(teacherId));
+    @GetMapping("/teacher/{teacherID}")
+    public ResponseEntity<List<SectionEntity>> getSectionsByTeacher(@PathVariable long teacherID) {
+        return ResponseEntity.ok(sectionService.getSectionsByTeacher(teacherID));
     }
 
-    // Get a section by ID
-    @GetMapping("/get/{sectionId}")
-    public ResponseEntity<SectionEntity> getSection(@PathVariable long sectionId) {
-        return sectionService.getSectionById(sectionId);
+    @GetMapping("/get/{sectionID}")
+    public ResponseEntity<SectionEntity> getSection(@PathVariable long sectionID) {
+        return sectionService.getSectionById(sectionID);
     }
 
-    // Delete a section
-    @DeleteMapping("/delete/{sectionId}")
-    public ResponseEntity<String> deleteSection(@PathVariable long sectionId) {
-        return sectionService.deleteSection(sectionId);
+    @DeleteMapping("/delete/{sectionID}")
+    public ResponseEntity<String> deleteSection(@PathVariable long sectionID) {
+        return sectionService.deleteSection(sectionID);
     }
 }
