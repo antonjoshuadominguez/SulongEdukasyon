@@ -25,9 +25,8 @@ public class SectionService {
             SectionEntity updatedSection = existingSection.get();
             updatedSection.setSectionName(section.getSectionName());
             updatedSection.setSectionDescription(section.getSectionDescription());
-            updatedSection.setTeacher(section.getTeacher());  
-            sectionRepo.save(updatedSection);
-            return updatedSection;
+            updatedSection.setTeacher(section.getTeacher());
+            return sectionRepo.save(updatedSection);
         } else {
             throw new RuntimeException("Section not found");
         }
@@ -38,8 +37,8 @@ public class SectionService {
     }
 
     public SectionEntity getSectionById(long sectionID) {
-        Optional<SectionEntity> section = sectionRepo.findById(sectionID);
-        return section.orElseThrow(() -> new RuntimeException("Section not found"));
+        return sectionRepo.findById(sectionID)
+                .orElseThrow(() -> new RuntimeException("Section not found"));
     }
 
     public ResponseEntity<String> deleteSection(long sectionID) {

@@ -3,7 +3,9 @@ package com.SulongEdukasyon.Sulong.Edukasyon.Controllers;
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.Dto.SectionDto;
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.Dto.SectionResponseDto;
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.Section.SectionEntity;
+import com.SulongEdukasyon.Sulong.Edukasyon.Models.Teacher.TeacherEntity;
 import com.SulongEdukasyon.Sulong.Edukasyon.Service.SectionService;
+import com.SulongEdukasyon.Sulong.Edukasyon.Models.Teacher.TeacherRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +21,20 @@ public class SectionController {
     @Autowired
     private SectionService sectionService;
 
+    @Autowired
+    private TeacherRepo teacherRepo; // This is the only necessary import
+
     @PostMapping("/create")
     public ResponseEntity<SectionResponseDto> createSection(@RequestBody SectionDto sectionDto) {
-        SectionEntity sectionEntity = new SectionEntity(sectionDto.getSectionName(), sectionDto.getSectionDescription(), sectionDto.getTeacherID());
+        TeacherEntity teacherEntity = teacherRepo.findByTeacherID(sectionDto.getTeacherID()); // Fetch teacher by teacherID
+        if (teacherEntity == null) {
+            return ResponseEntity.badRequest().body(null); // Return bad request if teacher not found
+        }
+        SectionEntity sectionEntity = new SectionEntity(
+                sectionDto.getSectionName(),
+                sectionDto.getSectionDescription(),
+                teacherEntity // Associate TeacherEntity
+        );
         SectionEntity savedSection = sectionService.createSection(sectionEntity);
         SectionResponseDto sectionResponseDto = new SectionResponseDto(
                 savedSection.getSectionID(),
@@ -34,7 +47,15 @@ public class SectionController {
 
     @PutMapping("/update/{sectionID}")
     public ResponseEntity<SectionResponseDto> updateSection(@PathVariable long sectionID, @RequestBody SectionDto sectionDto) {
-        SectionEntity sectionEntity = new SectionEntity(sectionDto.getSectionName(), sectionDto.getSectionDescription(), sectionDto.getTeacherID());
+        TeacherEntity teacherEntity = teacherRepo.findByTeacherID(sectionDto.getTeacherID()); // Fetch teacher by teacherID
+        if (teacherEntity == null) {
+            return ResponseEntity.badRequest().body(null); // Return bad request if teacher not found
+        }
+        SectionEntity sectionEntity = new SectionEntity(
+                sectionDto.getSectionName(),
+                sectionDto.getSectionDescription(),
+                teacherEntity // Associate TeacherEntity
+        );
         SectionEntity updatedSection = sectionService.updateSection(sectionID, sectionEntity);
         SectionResponseDto sectionResponseDto = new SectionResponseDto(
                 updatedSection.getSectionID(),
