@@ -152,21 +152,10 @@ const CreateRoom = () => {
               </Typography>
               <Box
                 sx={{
-                  backgroundColor: "#007bff",
-                  padding: "10px",
-                  color: "white",
+                  padding: "10px", // Removed backgroundColor
                   borderRadius: "8px",
                 }}
               >
-                <Typography>Answer: </Typography>
-                <Box sx={{ display: "flex", justifyContent: "space-around", marginTop: "10px" }}>
-                  <Button variant="contained" color="primary"></Button>
-                  <Button variant="contained" color="primary"></Button>
-                </Box>
-                <Box sx={{ display: "flex", justifyContent: "space-around", marginTop: "10px" }}>
-                  <Button variant="contained" color="primary"></Button>
-                  <Button variant="contained" color="primary"></Button>
-                </Box>
               </Box>
               <Button
                 variant="contained"
@@ -196,14 +185,10 @@ const CreateRoom = () => {
               </Typography>
               <Box
                 sx={{
-                  backgroundColor: "#007bff",
-                  padding: "10px",
-                  color: "white",
+                  padding: "10px", // Removed backgroundColor
                   borderRadius: "8px",
                 }}
               >
-                <Typography>Answer: </Typography>
-                <Typography>Timer: </Typography>
               </Box>
               <Button
                 variant="contained"
