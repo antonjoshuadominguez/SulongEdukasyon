@@ -19,14 +19,31 @@ public class UserService {
     private String otp;
 
     public ResponseEntity<?> register(RegisterUserDto newUser) {
-        UserEntity newUserEntity = new UserEntity(newUser.getFirstname(), newUser.getLastname(), newUser.getEmail(), newUser.getPassword(), newUser.getRole());
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        newUserEntity.setPassword(encoder.encode(newUserEntity.getPassword()));
-        if (userRepo.findByEmail(newUserEntity.getEmail()) != null) {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Invalid Email. This email is already taken.");
+        try {
+            UserEntity existingUser = userRepo.findByEmail(newUser.getEmail());
+            if (existingUser != null) {
+                return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Email is already taken.");
+            }
+
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            String hashedPassword = encoder.encode(newUser.getPassword());
+
+            UserEntity newUserEntity = new UserEntity(
+                newUser.getFirstname(),
+                newUser.getLastname(),
+                newUser.getEmail(),
+                hashedPassword,
+                newUser.getRole()
+            );
+
+            userRepo.save(newUserEntity);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(newUserEntity);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("An error occurred while processing your registration. Please try again.");
         }
-        userRepo.save(newUserEntity);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newUserEntity);
     }
 
     public List<UserEntity> getAllUsers() {
