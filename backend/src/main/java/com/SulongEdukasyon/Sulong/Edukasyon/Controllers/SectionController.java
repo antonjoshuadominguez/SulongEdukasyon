@@ -2,6 +2,7 @@ package com.SulongEdukasyon.Sulong.Edukasyon.Controllers;
 
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.Dto.SectionDto;
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.Dto.SectionResponseDto;
+import com.SulongEdukasyon.Sulong.Edukasyon.Models.Dto.StudentResponseDto;
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.Section.SectionEntity;
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.Student.StudentEntity;
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.Student.StudentRepo;
@@ -9,6 +10,7 @@ import com.SulongEdukasyon.Sulong.Edukasyon.Models.StudentSection.StudentSection
 import com.SulongEdukasyon.Sulong.Edukasyon.Service.SectionService;
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.Teacher.TeacherEntity;
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.Teacher.TeacherRepo;
+import com.SulongEdukasyon.Sulong.Edukasyon.Models.User.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +27,7 @@ public class SectionController {
     private SectionService sectionService;
 
     @Autowired
-    private TeacherRepo teacherRepo; 
+    private TeacherRepo teacherRepo;
 
     @Autowired
     private StudentRepo studentRepo;
@@ -33,14 +35,14 @@ public class SectionController {
     // Create a new section
     @PostMapping("/create")
     public ResponseEntity<SectionResponseDto> createSection(@RequestBody SectionDto sectionDto) {
-        TeacherEntity teacherEntity = teacherRepo.findByTeacherID(sectionDto.getTeacherID()); 
+        TeacherEntity teacherEntity = teacherRepo.findByTeacherID(sectionDto.getTeacherID());
         if (teacherEntity == null) {
             return ResponseEntity.badRequest().body(null);
         }
         SectionEntity sectionEntity = new SectionEntity(
                 sectionDto.getSectionName(),
                 sectionDto.getSectionDescription(),
-                teacherEntity 
+                teacherEntity
         );
         SectionEntity savedSection = sectionService.createSection(sectionEntity);
         SectionResponseDto sectionResponseDto = new SectionResponseDto(
@@ -55,14 +57,14 @@ public class SectionController {
     // Update section details
     @PutMapping("/update/{sectionID}")
     public ResponseEntity<SectionResponseDto> updateSection(@PathVariable long sectionID, @RequestBody SectionDto sectionDto) {
-        TeacherEntity teacherEntity = teacherRepo.findByTeacherID(sectionDto.getTeacherID()); 
+        TeacherEntity teacherEntity = teacherRepo.findByTeacherID(sectionDto.getTeacherID());
         if (teacherEntity == null) {
             return ResponseEntity.badRequest().body(null);
         }
         SectionEntity sectionEntity = new SectionEntity(
                 sectionDto.getSectionName(),
                 sectionDto.getSectionDescription(),
-                teacherEntity 
+                teacherEntity
         );
         SectionEntity updatedSection = sectionService.updateSection(sectionID, sectionEntity);
         SectionResponseDto sectionResponseDto = new SectionResponseDto(
@@ -129,6 +131,27 @@ public class SectionController {
 
         sectionService.addStudentToSection(studentSection);
         return ResponseEntity.ok("Student added to section successfully");
+    }
+
+    // Fetch all students
+    @GetMapping("/students")
+    public ResponseEntity<List<StudentResponseDto>> getAllStudents() {
+        List<StudentEntity> students = studentRepo.findAll();  // Fetch all students
+
+        List<StudentResponseDto> studentResponseDtos = students.stream()
+            .map(student -> {
+                // Extract email from the UserEntity
+                UserEntity userEntity = student.getUser();
+                return new StudentResponseDto(
+                    student.getStudentID(),
+                    userEntity.getFirstname(),
+                    userEntity.getLastname(),
+                    userEntity.getEmail()  // Email fetched from UserEntity
+                );
+            })
+            .collect(Collectors.toList());
+
+        return ResponseEntity.ok(studentResponseDtos);
     }
 
     // Remove a student from a section

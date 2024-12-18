@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface StudentSectionRepo extends JpaRepository<StudentSectionEntity, Long> {
-    StudentSectionEntity findBySectionSectionIDAndStudentStudentID(long sectionID, long studentID); 
+    StudentSectionEntity findBySection_SectionIDAndStudent_StudentID(long sectionID, long studentID);
 }

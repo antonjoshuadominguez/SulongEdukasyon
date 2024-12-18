@@ -6,6 +6,9 @@ import com.SulongEdukasyon.Sulong.Edukasyon.Models.Student.StudentEntity;
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.Student.StudentRepo;
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.StudentSection.StudentSectionEntity;
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.StudentSection.StudentSectionRepo;
+import com.SulongEdukasyon.Sulong.Edukasyon.Models.User.UserEntity;
+import com.SulongEdukasyon.Sulong.Edukasyon.Models.User.UserRepo;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,9 @@ public class SectionService {
 
     @Autowired
     private StudentRepo studentRepo;
+
+    @Autowired
+    private UserRepo userRepo;
 
     // Create a new section
     public SectionEntity createSection(SectionEntity section) {
@@ -73,7 +79,7 @@ public class SectionService {
 
     // Remove student from section
     public boolean removeStudentFromSection(long sectionID, long studentID) {
-        StudentSectionEntity studentSectionEntity = studentSectionRepo.findBySectionSectionIDAndStudentStudentID(sectionID, studentID);
+        StudentSectionEntity studentSectionEntity = studentSectionRepo.findBySection_SectionIDAndStudent_StudentID(sectionID, studentID);
         if (studentSectionEntity != null) {
             studentSectionRepo.delete(studentSectionEntity);
             return true;
@@ -84,6 +90,36 @@ public class SectionService {
     // Get a student by ID
     public Optional<StudentEntity> getStudentById(long studentID) {
         return studentRepo.findById(studentID);
+    }
+
+    // Get all students
+    public List<StudentEntity> getAllStudents() {
+        return studentRepo.findAll();
+    }
+
+    // Update student information
+    public ResponseEntity<StudentEntity> updateStudent(long studentID, StudentEntity updatedStudent) {
+        Optional<StudentEntity> existingStudent = studentRepo.findById(studentID);
+        if (existingStudent.isPresent()) {
+            StudentEntity student = existingStudent.get();
+            UserEntity user = student.getUser();
+
+            // Update the user's details (e.g., firstname, lastname)
+            user.setFirstname(updatedStudent.getUser().getFirstname());
+            user.setLastname(updatedStudent.getUser().getLastname());
+            user.setEmail(updatedStudent.getUser().getEmail());  // if email is updated as well
+            
+            // Save updated user information
+            userRepo.save(user);
+            
+            // Save updated student entity (if required)
+            student.setUser(user);
+            studentRepo.save(student);
+            
+            return ResponseEntity.ok(student);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     // Get section by sectionID
