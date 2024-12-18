@@ -2,6 +2,7 @@ package com.SulongEdukasyon.Sulong.Edukasyon.Controllers;
 
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.Dto.SectionDto;
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.Dto.SectionResponseDto;
+import com.SulongEdukasyon.Sulong.Edukasyon.Models.Dto.StudentDto;
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.Dto.StudentResponseDto;
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.Section.SectionEntity;
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.Student.StudentEntity;
@@ -11,6 +12,7 @@ import com.SulongEdukasyon.Sulong.Edukasyon.Service.SectionService;
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.Teacher.TeacherEntity;
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.Teacher.TeacherRepo;
 import com.SulongEdukasyon.Sulong.Edukasyon.Models.User.UserEntity;
+import com.SulongEdukasyon.Sulong.Edukasyon.Models.User.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +33,9 @@ public class SectionController {
 
     @Autowired
     private StudentRepo studentRepo;
+
+    @Autowired
+    private UserRepo userRepo;
 
     // Create a new section
     @PostMapping("/create")
@@ -110,28 +115,28 @@ public class SectionController {
         return sectionService.deleteSection(sectionID);
     }
 
-    // Add a student to a section
     @PostMapping("/add-student/{sectionID}")
-    public ResponseEntity<String> addStudentToSection(@PathVariable long sectionID, @RequestBody long studentID) {
-        SectionEntity sectionEntity = sectionService.getSectionById(sectionID);
-        if (sectionEntity == null) {
-            return ResponseEntity.status(404).body("Section not found");
-        }
-
-        StudentEntity studentEntity = studentRepo.findById(studentID).orElse(null);
-        if (studentEntity == null) {
-            return ResponseEntity.status(404).body("Student not found");
-        }
-
-        // Create a new StudentSection entity to link student to section
-        StudentSectionEntity studentSection = new StudentSectionEntity();
-        studentSection.setSection(sectionEntity);
-        studentSection.setStudent(studentEntity);
-        studentSection.setEnrollmentDate(java.time.LocalDate.now().toString());
-
-        sectionService.addStudentToSection(studentSection);
-        return ResponseEntity.ok("Student added to section successfully");
+public ResponseEntity<String> addStudentToSection(@PathVariable long sectionID, @RequestBody StudentDto studentDto) {
+    SectionEntity sectionEntity = sectionService.getSectionById(sectionID);
+    if (sectionEntity == null) {
+        return ResponseEntity.status(404).body("Section not found");
     }
+
+    UserEntity userEntity = new UserEntity(studentDto.getFirstName(), studentDto.getLastName());
+    userEntity = userRepo.save(userEntity); 
+    
+    StudentEntity studentEntity = new StudentEntity(userEntity); 
+    studentEntity = studentRepo.save(studentEntity);  
+
+    StudentSectionEntity studentSection = new StudentSectionEntity();
+    studentSection.setSection(sectionEntity);
+    studentSection.setStudent(studentEntity);
+    studentSection.setEnrollmentDate(java.time.LocalDate.now().toString());
+
+    sectionService.addStudentToSection(studentSection);
+    return ResponseEntity.ok("Student added to section successfully");
+}
+
 
     // Fetch all students
     @GetMapping("/students")

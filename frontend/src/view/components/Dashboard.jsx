@@ -1,10 +1,20 @@
 import React, { useState } from 'react';
 import '../css/Dashboard.css';
 import Sidebar from './Sidebar';
-import { fetchSections, createSection, updateSection, deleteSection, addStudentToSection, deleteStudentFromSection, fetchStudentsInSection } from '../../controller/SectionController';
+import { 
+  fetchSections, 
+  createSection, 
+  updateSection, 
+  deleteSection, 
+  addStudentToSection, 
+  removeStudentFromSection, 
+  fetchAllStudents, 
+  fetchStudentsInSection, 
+  updateStudent 
+} from '../../controller/SectionController';
 
 const Dashboard = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Add student modal visibility
   const [sections, setSections] = useState([]);
   const [sectionName, setSectionName] = useState('');
   const [sectionDescription, setSectionDescription] = useState('');
@@ -12,6 +22,11 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [editingSection, setEditingSection] = useState(null); // Track the section being edited
   const [myLessons, setMyLessons] = useState([]);  // New state to store lessons
+  const [studentFirstName, setStudentFirstName] = useState(''); // State for student first name
+  const [studentLastName, setStudentLastName] = useState(''); // State for student last name
+  const [selectedSectionId, setSelectedSectionId] = useState(null); // State to track selected section
+  const [students, setStudents] = useState([]);  // State for storing students
+  const [loadingStudents, setLoadingStudents] = useState(false);  // Loading state for students
   const teacherId = 1;
 
   // Function to fetch sections when the button is clicked
@@ -29,7 +44,6 @@ const Dashboard = () => {
 
   // Fetch lessons for the teacher
   const loadLessons = () => {
-    // You can implement a function to fetch lessons or assign mock data for now
     const fetchedLessons = [
       { id: 1, name: "Math Lesson 1" },
       { id: 2, name: "English Lesson 1" },
@@ -54,6 +68,13 @@ const Dashboard = () => {
     setSectionName('');
     setSectionDescription('');
     setEditingSection(null); // Reset editingSection state when closing the popup
+  };
+
+  const openAddStudentModal = (sectionId) => {
+    setSelectedSectionId(sectionId); // Set the section ID where the student should be added
+    setStudentFirstName(''); // Reset student first name
+    setStudentLastName(''); // Reset student last name
+    setIsModalOpen(true); // Open the modal for adding a student
   };
 
   const handleCreateSection = async () => {
@@ -120,26 +141,37 @@ const Dashboard = () => {
   };
 
   // Add student to the section
-  const handleAddStudent = async (sectionId, studentId) => {
-    try {
-      await addStudentToSection(sectionId, studentId);
-      const updatedSections = sections.map((section) => {
-        if (section.sectionID === sectionId) {
-          section.students.push({ studentId }); // Assuming you are keeping the student object
-        }
-        return section;
-      });
-      setSections(updatedSections);
-    } catch (error) {
-      console.error('Error adding student:', error);
-      alert('Error adding student');
+  const handleAddStudent = async () => {
+    if (studentFirstName && studentLastName) {
+      const newStudent = {
+        firstName: studentFirstName,
+        lastName: studentLastName,
+      };
+
+      try {
+        await addStudentToSection(selectedSectionId, newStudent);
+        // Update the sections list to include the new student
+        const updatedSections = sections.map((section) => {
+          if (section.sectionID === selectedSectionId) {
+            section.students.push({ firstName: studentFirstName, lastName: studentLastName });
+          }
+          return section;
+        });
+        setSections(updatedSections);
+        setIsModalOpen(false); // Close the modal after adding student
+      } catch (error) {
+        console.error('Error adding student:', error);
+        alert('Error adding student');
+      }
+    } else {
+      alert('Please provide both student first name and last name.');
     }
   };
 
   // Remove student from section
   const handleRemoveStudent = async (sectionId, studentId) => {
     try {
-      await deleteStudentFromSection(sectionId, studentId);
+      await removeStudentFromSection(sectionId, studentId);
       const updatedSections = sections.map((section) => {
         if (section.sectionID === sectionId) {
           section.students = section.students.filter((student) => student.studentId !== studentId);
@@ -150,6 +182,19 @@ const Dashboard = () => {
     } catch (error) {
       console.error('Error removing student:', error);
       alert('Error removing student');
+    }
+  };
+
+  // Fetch all students manually
+  const loadStudents = async () => {
+    setLoadingStudents(true);
+    try {
+      const data = await fetchAllStudents();
+      setStudents(data);
+    } catch (error) {
+      console.error('Error fetching students:', error);
+    } finally {
+      setLoadingStudents(false);
     }
   };
 
@@ -198,9 +243,9 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              {/* My Rooms */}
+              {/* My Sections */}
               <div className="my-rooms-container">
-                <h2>My Rooms</h2>
+                <h2>My Sections</h2>
                 <div className="rooms-content">
                   {sections.length > 0 ? (
                     sections.map((section) => (
@@ -209,7 +254,7 @@ const Dashboard = () => {
                         <p>{section.section_description}</p>
                         <button
                           className="add-student-button"
-                          onClick={() => handleAddStudent(section.sectionID, studentId)}
+                          onClick={() => openAddStudentModal(section.sectionID)}
                         >
                           Add Student
                         </button>
@@ -230,7 +275,7 @@ const Dashboard = () => {
                           {section.students && section.students.length > 0 ? (
                             section.students.map((student) => (
                               <div key={student.studentId}>
-                                <span>{student.name}</span>
+                                <span>{student.firstName} {student.lastName}</span>
                                 <button
                                   className="remove-student-button"
                                   onClick={() => handleRemoveStudent(section.sectionID, student.studentId)}
@@ -284,6 +329,40 @@ const Dashboard = () => {
             </div>
           </div>
         )}
+
+        {/* Add student modal */}
+        {isModalOpen && (
+          <div className="add-student-popup-overlay">
+            <div className="add-student-popup-content">
+              <div className="add-student-popup-header">
+                <h3>Add Student to Section</h3>
+                <button className="close-popup-button" onClick={() => setIsModalOpen(false)}>X</button>
+              </div>
+              <div className="add-student-popup-body">
+                <input
+                  type="text"
+                  placeholder="First Name"
+                  value={studentFirstName}
+                  onChange={(e) => setStudentFirstName(e.target.value)}
+                />
+                <input
+                  type="text"
+                  placeholder="Last Name"
+                  value={studentLastName}
+                  onChange={(e) => setStudentLastName(e.target.value)}
+                />
+                <button className="add-student-popup-button" onClick={handleAddStudent}>
+                  Add Student
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Fetch students button */}
+        <button className="fetch-students-button" onClick={loadStudents} disabled={loadingStudents}>
+          {loadingStudents ? 'Loading Students...' : 'Fetch Students'}
+        </button>
       </div>
     </div>
   );

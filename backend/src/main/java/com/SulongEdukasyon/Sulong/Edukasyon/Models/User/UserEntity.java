@@ -12,20 +12,25 @@ import lombok.*;
 @Setter
 public class UserEntity {
     @Id
-    @GeneratedValue(strategy =  GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long userID;
-    private String firstname;   
+    private String firstname;
     private String lastname;
     private String email;
     @JsonIgnore
     private String password;
-    private String role; 
+    private String role;
+
+    public UserEntity(String firstname, String lastname) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+    }
 
     public UserEntity(String firstname, String lastname, String email, String password, String role) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
         this.password = password;
-        this.role = role;  
+        this.role = role;
     }
 }
