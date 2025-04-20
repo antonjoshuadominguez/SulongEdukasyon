@@ -30,14 +30,6 @@ A dynamic, gamified educational platform designed to revolutionize learning for 
 - **Real-time**: WebSockets for multiplayer games
 - **Deployment**: Supports local development and Supabase integration
 
-## Getting Started
-
-See the following guides for detailed setup instructions:
-
-- [Local Development Guide](./LOCAL_DEVELOPMENT_GUIDE.md) - Setting up and running the project locally
-- [Supabase Setup Guide](./SUPABASE_SETUP.md) - Integrating with Supabase
-- [Project Cleanup Guide](./cleanup.md) - Removing unused files and optimizing the project
-
 ## Quick Start
 
 1. Clone the repository
