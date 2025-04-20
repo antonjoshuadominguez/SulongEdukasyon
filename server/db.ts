@@ -36,10 +36,16 @@ function createPool() {
   }
   
   // Initialize PostgreSQL Pool for connections with SSL options for Supabase
+  // In Vercel environment, enable special handling for serverless functions
+  const isVercel = process.env.VERCEL === '1';
+  
   const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     // SSL settings for Supabase
     ssl: { rejectUnauthorized: false },
+    // Improve connection handling for serverless environments
+    max: isVercel ? 1 : 20,
+    idleTimeoutMillis: isVercel ? 10000 : 30000,
   });
   
   // Test the connection

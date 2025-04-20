@@ -1,18 +1,20 @@
 {
-    "builds": [
-      {
-        "src": "server/index.ts",
-        "use": "@vercel/node"
-      }
-    ],
-    "routes": [
-      {
-        "src": "/api/(.*)",
-        "dest": "dist/index.js"
-      },
-      {
-        "src": "/(.*)",
-        "dest": "client/dist/$1"
-      }
-    ]
+  "version": 2,
+  "buildCommand": "vite build && esbuild server/vercel-deploy.ts server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist --external:pg-native",
+  "outputDirectory": "client/dist",
+  "framework": null,
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/server.js"
+    }
+  ],
+  "functions": {
+    "api/server.js": {
+      "includeFiles": "dist/**"
+    }
+  },
+  "env": {
+    "NODE_ENV": "production"
   }
+}
