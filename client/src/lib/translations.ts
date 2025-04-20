@@ -99,6 +99,11 @@ export const translations: Record<string, string> = {
   "Help": "Tulong",
   "Log Out": "Mag-logout",
   "Profile Settings": "Mga Setting ng Profile",
+  "recent_lobbies": "Mga Kamakailang Laro",
+  "show_more": "Ipakita pa",
+  "show_less": "Ipakita mas kaunti",
+  "no_recent_lobbies": "Walang kamakailang laro",
+  "playground": "Playground",
   
   // Leaderboard
   "Leaderboard": "Leaderboard",

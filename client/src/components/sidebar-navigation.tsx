@@ -5,13 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
   Home, 
-  Pencil, 
   LogOut,
   User,
   Globe,
   Trophy
 } from "lucide-react";
 import ProfileModal from "@/components/profile/profile-modal";
+import SidebarRecentLobbies from "@/components/sidebar-recent-lobbies";
 
 import { useState } from "react";
 import {
@@ -70,14 +70,7 @@ export default function SidebarNavigation() {
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>
-              <SidebarMenuItem>
-                <Link href="/playground">
-                  <SidebarMenuButton className={isActive("/playground") ? "bg-primary/10 text-primary" : ""}>
-                    <Pencil className="mr-2 h-5 w-5" />
-                    <span>{translate("playground")}</span>
-                  </SidebarMenuButton>
-                </Link>
-              </SidebarMenuItem>
+              <SidebarRecentLobbies />
               
 
             </SidebarMenu>
