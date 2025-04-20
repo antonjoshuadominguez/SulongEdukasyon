@@ -1,24 +1,10 @@
 {
-  "version": 2,
-  "buildCommand": "mkdir -p dist/public && vite build --outDir dist/public && esbuild server/vercel-deploy.ts server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist --external:pg-native",
-  "outputDirectory": "dist",
-  "framework": null,
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/server.js"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/$1"
-    }
+    { "source": "/api/(.*)", "destination": "/api" }
   ],
   "functions": {
-    "api/server.js": {
-      "includeFiles": "dist/**"
+    "api/index.js": {
+      "memory": 1024
     }
-  },
-  "env": {
-    "NODE_ENV": "production"
   }
 }
