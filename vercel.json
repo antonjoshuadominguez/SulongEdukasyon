@@ -2,11 +2,10 @@
   "version": 2,
   "builds": [
     {
-      "src": "client/**/*.html",
+      "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist",
-        "cleanUrls": true
+        "distDir": "dist"
       }
     },
     {
@@ -21,10 +20,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "dist/$1",
-      "headers": {
-        "Cache-Control": "s-maxage=31536000, immutable"
-      }
+      "dest": "dist/$1"
     }
   ]
 }
