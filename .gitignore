@@ -6,5 +6,5 @@ vite.config.ts.*
 *.tar.gz
 /client/dist
 /dist
-/client/dist
+/server-dist
 node_modules
