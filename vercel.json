@@ -1,12 +1,16 @@
 {
   "version": 2,
-  "buildCommand": "vite build && esbuild server/vercel-deploy.ts server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist --external:pg-native",
-  "outputDirectory": "client/dist",
+  "buildCommand": "vite build && esbuild server/vercel-deploy.ts server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist --external:pg-native && mkdir -p dist/public && cp -r client/dist/* dist/public/",
+  "outputDirectory": "dist",
   "framework": null,
   "rewrites": [
     {
       "source": "/api/(.*)",
       "destination": "/api/server.js"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/$1"
     }
   ],
   "functions": {

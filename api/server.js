@@ -12,6 +12,9 @@ export default function handler(req, res) {
   // Set NODE_ENV to production for Vercel
   process.env.NODE_ENV = 'production';
   
+  // Set VERCEL_OUTPUT_PATH to help the app find static assets
+  process.env.VERCEL_OUTPUT_PATH = '/dist/public';
+  
   // Forward to Express app
   return app(req, res);
 }
