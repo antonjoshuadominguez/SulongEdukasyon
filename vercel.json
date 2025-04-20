@@ -5,20 +5,12 @@
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "client/dist/public"
+        "distDir": "client/dist" 
       }
     },
     {
       "src": "server/api/*.ts",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": [
-          "server/**",
-          "shared/**",
-          "env/**",
-          "drizzle.config.ts"
-        ]
-      }
+      "use": "@vercel/node"
     }
   ],
   "routes": [
@@ -28,7 +20,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "client/dist/public/$1"
+      "dest": "client/dist/public/$1" 
     }
   ]
 }
