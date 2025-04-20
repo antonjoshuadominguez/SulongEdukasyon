@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "client/**/*.html", // Entry point
+      "src": "client/**/*.html",
       "use": "@vercel/static-build",
       "config": {
         "distDir": "dist",
