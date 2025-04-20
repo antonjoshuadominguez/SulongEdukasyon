@@ -44,9 +44,9 @@ setupAuth(app);
 // Serve static files - handle both development and Vercel environments
 let clientDistPath: string;
 
-if (process.env.VERCEL === '1' && process.env.VERCEL_OUTPUT_PATH) {
-  // In Vercel environment, use the public directory in the specified output path
-  clientDistPath = path.join(path.resolve(), process.env.VERCEL_OUTPUT_PATH);
+if (process.env.VERCEL === '1') {
+  // In Vercel environment, use the public directory in the output path
+  clientDistPath = path.join(path.resolve(), 'dist', 'public');
   console.log(`Using Vercel static path: ${clientDistPath}`);
 } else {
   // In local development, use the client/dist directory
@@ -54,7 +54,11 @@ if (process.env.VERCEL === '1' && process.env.VERCEL_OUTPUT_PATH) {
   console.log(`Using local static path: ${clientDistPath}`);
 }
 
-app.use(express.static(clientDistPath));
+// Serve static files with proper caching headers
+app.use(express.static(clientDistPath, {
+  maxAge: '1d',  // Cache assets for 1 day
+  etag: true
+}));
 
 // Error handler
 app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {

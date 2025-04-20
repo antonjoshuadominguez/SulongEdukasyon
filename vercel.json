@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "vite build && esbuild server/vercel-deploy.ts server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist --external:pg-native && mkdir -p dist/public && cp -r client/dist/* dist/public/",
+  "buildCommand": "mkdir -p dist/public && vite build --outDir dist/public && esbuild server/vercel-deploy.ts server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist --external:pg-native",
   "outputDirectory": "dist",
   "framework": null,
   "rewrites": [
