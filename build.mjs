@@ -1,44 +1,49 @@
-const { exec } = require('child_process');
-const fs = require('fs');
-const path = require('path');
+import { exec as execCallback } from 'child_process';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { promisify } from 'util';
 
-// Build frontend
-console.log('Building frontend...');
-exec('vite build', (err) => {
-  if (err) {
-    console.error('Error building frontend:', err);
-    process.exit(1);
-  }
-  
-  console.log('Frontend build complete. Building backend...');
-  // Build backend
-  exec('tsc -p tsconfig.server.json', (err) => {
-    if (err) {
-      console.error('Error building backend:', err);
-      process.exit(1);
-    }
+const exec = promisify(execCallback);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+async function main() {
+  try {
+    // Build frontend
+    console.log('Building frontend...');
+    await exec('vite build');
+    console.log('Frontend build complete. Building backend...');
     
+    // Build backend
+    await exec('tsc -p tsconfig.server.json');
     console.log('Backend build complete. Fixing import statements...');
+    
     // Fix imports in server files by adding .js extensions
     const serverDir = path.join(__dirname, 'dist', 'server');
-    fixImports(serverDir);
+    await fixImports(serverDir);
     
     console.log('Build completed successfully!');
-  });
-});
+  } catch (error) {
+    console.error('Build failed:', error);
+    process.exit(1);
+  }
+}
 
-function fixImports(dir) {
+async function fixImports(dir) {
   if (!fs.existsSync(dir)) {
     console.error(`Directory does not exist: ${dir}`);
     return;
   }
   
-  fs.readdirSync(dir, { withFileTypes: true }).forEach(dirent => {
-    const filePath = path.join(dir, dirent.name);
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  
+  for (const entry of entries) {
+    const filePath = path.join(dir, entry.name);
     
-    if (dirent.isDirectory()) {
-      fixImports(filePath);
-    } else if (dirent.name.endsWith('.js')) {
+    if (entry.isDirectory()) {
+      await fixImports(filePath);
+    } else if (entry.name.endsWith('.js')) {
       console.log(`Processing file: ${filePath}`);
       let content = fs.readFileSync(filePath, 'utf8');
       
@@ -60,5 +65,11 @@ function fixImports(dir) {
         fs.writeFileSync(filePath, content, 'utf8');
       }
     }
-  });
+  }
 }
+
+// Run the main function
+main().catch(err => {
+  console.error('Unhandled error:', err);
+  process.exit(1);
+});
