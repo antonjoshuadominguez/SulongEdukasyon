@@ -15,9 +15,9 @@ async function main() {
     await execPromise('vite build');
     console.log('Frontend build complete.');
     
-    // Use esbuild for the backend, exactly like in package.json
+    // Build all the server files to make sure everything is included
     console.log('Building backend...');
-    await execPromise('esbuild server/index.ts --platform=node --outdir=dist/server');
+    await execPromise('esbuild server/*.ts --platform=node --outdir=dist/server');
     console.log('Backend build complete.');
     
     // Also build shared code which contains the schema
