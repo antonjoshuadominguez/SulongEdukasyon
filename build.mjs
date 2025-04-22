@@ -15,8 +15,9 @@ async function main() {
     await exec('vite build');
     console.log('Frontend build complete. Building backend...');
     
-    // Build backend
-    await exec('tsc -p tsconfig.server.json');
+    // Build backend with correct module format
+    // Override the module setting to NodeNext which supports import.meta
+    await exec('tsc -p tsconfig.server.json --module NodeNext --moduleResolution NodeNext');
     console.log('Backend build complete. Fixing import statements...');
     
     // Fix imports in server files by adding .js extensions
