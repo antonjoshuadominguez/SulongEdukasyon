@@ -20,6 +20,10 @@ async function main() {
     await execPromise('esbuild server/*.ts --platform=node --outdir=dist/server');
     console.log('Backend build complete.');
     
+    // Build the vite.config.ts file that's imported in server/vite.ts
+    console.log('Building vite config...');
+    await execPromise('esbuild vite.config.ts --platform=node --outdir=dist');
+    
     // Also build shared code which contains the schema
     console.log('Building shared code...');
     await execPromise('esbuild shared/schema.ts --platform=node --outdir=dist/shared');
@@ -34,6 +38,9 @@ async function main() {
     if (fs.existsSync(sharedDir)) {
       await fixImports(sharedDir);
     }
+    
+    // Fix imports in root dist directory (vite.config.js)
+    await fixImports(path.join(__dirname, 'dist'));
     
     // Create an entry point file at dist/index.js as referenced in start script
     console.log('Creating entry point file...');
