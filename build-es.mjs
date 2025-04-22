@@ -4,6 +4,33 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { promisify } from 'util';
 
+// Function to copy a directory recursively
+function copyDirectory(source, destination) {
+  // Create the destination directory if it doesn't exist
+  if (!fs.existsSync(destination)) {
+    fs.mkdirSync(destination, { recursive: true });
+  }
+  
+  // Read all items in the source directory
+  const items = fs.readdirSync(source, { withFileTypes: true });
+  
+  // Process each item
+  for (const item of items) {
+    const srcPath = path.join(source, item.name);
+    const destPath = path.join(destination, item.name);
+    
+    if (item.isDirectory()) {
+      // Recursively copy subdirectories
+      copyDirectory(srcPath, destPath);
+    } else {
+      // Copy files
+      fs.copyFileSync(srcPath, destPath);
+    }
+  }
+  
+  console.log(`Copied directory: ${source} -> ${destination}`);
+}
+
 const execPromise = promisify(exec);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -46,6 +73,18 @@ async function main() {
     console.log('Creating entry point file...');
     const entryContent = `import './server/index.js';\n`;
     fs.writeFileSync(path.join(__dirname, 'dist', 'index.js'), entryContent);
+    
+    // Create the expected directory structure for the build
+    console.log('Creating correct directory structure for static files...');
+    // First, make sure the public directory is in the right place
+    const distPublicPath = path.join(__dirname, 'dist', 'public');
+    if (fs.existsSync(distPublicPath)) {
+      console.log('Copying static files to the correct location...');
+      if (!fs.existsSync(path.join(__dirname, 'dist', 'dist'))) {
+        fs.mkdirSync(path.join(__dirname, 'dist', 'dist'));
+      }
+      copyDirectory(distPublicPath, path.join(__dirname, 'dist', 'dist', 'public'));
+    }
     
     console.log('Build completed successfully!');
   } catch (error) {
