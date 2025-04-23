@@ -26,7 +26,6 @@ function Router() {
       <ProtectedRoute path="/stats" component={StatsPage} />
       <ProtectedRoute path="/help" component={HelpPage} />
       <ProtectedRoute path="/game/:lobbyId" component={GamePage} />
-      <Route path="/test-puzzle" component={TestPuzzlePage} />
       <Route path="/auth" component={AuthPage} />
       <Route component={NotFound} />
     </Switch>
