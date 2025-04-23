@@ -961,6 +961,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Invalid lobby ID" });
       }
       
+      // Verify the lobby exists first to avoid foreign key issues
+      const lobby = await storage.getGameLobbyById(lobbyId);
+      if (!lobby) {
+        console.error(`Lobby with ID ${lobbyId} not found`);
+        return res.status(404).json({ message: "Lobby not found" });
+      }
+      
       console.log(`Fetching images for lobby ID ${lobbyId}...`);
       
       // First get all images to debug
@@ -1026,6 +1033,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!imageUrl || !description || !lobbyId) {
         return res.status(400).json({ message: "Missing required fields" });
       }
+
+      // Verify the lobby exists before creating a related image
+      const parsedLobbyId = parseInt(lobbyId);
+      const lobby = await storage.getGameLobbyById(parsedLobbyId);
+      if (!lobby) {
+        console.error(`Cannot create image: Lobby with ID ${parsedLobbyId} not found`);
+        return res.status(404).json({ message: "Lobby not found" });
+      }
       
       // Generate a title based on lobby ID if not provided
       const title = req.body.title || `Image for lobby ${lobbyId}`;
@@ -1045,7 +1060,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         imageUrl,
         description,
         title,
-        lobbyId: parseInt(lobbyId)
+        lobbyId: parsedLobbyId
       });
       
       const newImage = await storage.addGameImage(imageData);
@@ -1084,6 +1099,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let updateData = { ...req.body };
       if (updateData.lobbyId) {
         updateData.lobbyId = parseInt(updateData.lobbyId);
+        
+        // Verify the lobby exists before updating with a new lobbyId
+        const lobby = await storage.getGameLobbyById(updateData.lobbyId);
+        if (!lobby) {
+          console.error(`Cannot update image: Lobby with ID ${updateData.lobbyId} not found`);
+          return res.status(404).json({ message: "Target lobby not found" });
+        }
       }
       
       // Update image (in memory storage only supports full replacement)

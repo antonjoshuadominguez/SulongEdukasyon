@@ -914,6 +914,14 @@ export class DatabaseStorage implements IStorage {
       lobbyId: image.lobbyId
     });
     
+    // First verify if the lobby exists (to avoid foreign key constraint issues)
+    if (image.lobbyId) {
+      const lobby = await this.getGameLobbyById(image.lobbyId);
+      if (!lobby) {
+        throw new Error(`Cannot add image: Lobby with ID ${image.lobbyId} does not exist`);
+      }
+    }
+    
     // If the image URL is a base64 data URL, upload it to Supabase Storage using our utility
     if (image.imageUrl && image.imageUrl.startsWith('data:image')) {
       try {
@@ -932,14 +940,19 @@ export class DatabaseStorage implements IStorage {
       }
     }
     
-    // Save the image metadata to the database
-    // Note: The Drizzle ORM should handle the mapping between imageUrl in JavaScript 
-    // and image_url in the database automatically based on the schema
-    const [newImage] = await db.insert(gameImages)
-      .values(image)
-      .returning();
-    
-    return newImage;
+    try {
+      // Save the image metadata to the database
+      // Note: The Drizzle ORM should handle the mapping between imageUrl in JavaScript 
+      // and image_url in the database automatically based on the schema
+      const [newImage] = await db.insert(gameImages)
+        .values(image)
+        .returning();
+      
+      return newImage;
+    } catch (error) {
+      console.error('Error creating game image in database:', error);
+      throw new Error('Failed to create game image');
+    }
   }
 }
 

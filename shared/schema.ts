@@ -84,7 +84,7 @@ export const gameImages = pgTable("game_images", {
   title: text("title").notNull(),
   imageUrl: text("image_url").notNull(),
   description: text("description").notNull(), // Historical fact about the image
-  lobbyId: integer("lobby_id"),  // Optional reference to a game lobby
+  lobbyId: integer("lobby_id").references(() => gameLobbies.id), // Reference to a game lobby
 });
 
 // Schemas for data insertion
