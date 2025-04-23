@@ -56,7 +56,10 @@ export const gameLobbies = pgTable("game_lobbies", {
   customEvents: text("custom_events"), // Custom events for Arrange Timeline game
   customSentences: text("custom_sentences"), // Custom sentences for Fill Blanks game
   customCategories: text("custom_categories"), // Custom categories for Tama ang Ayos game
-  customItems: text("custom_items") // Custom items for Tama ang Ayos game
+  customItems: text("custom_items"), // Custom items for Tama ang Ayos game
+  
+  // Custom fields for Picture Matching
+  customMatchingImages: text("custom_matching_images") // JSON array of image objects with imageUrl and description
 });
 
 // Participant in game lobbies
@@ -115,6 +118,7 @@ export const insertGameLobbySchema = createInsertSchema(gameLobbies).pick({
   customSentences: true,
   customCategories: true,
   customItems: true,
+  customMatchingImages: true,
 });
 
 export const insertLobbyParticipantSchema = createInsertSchema(lobbyParticipants).pick({

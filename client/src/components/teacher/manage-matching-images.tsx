@@ -45,10 +45,35 @@ export default function ManageMatchingImages({ lobbyId }: ManageMatchingImagesPr
     const fetchImages = async () => {
       try {
         setLoading(true);
+        
+        // First, try to fetch from the game lobby directly
+        const lobbyResponse = await fetch(`/api/lobbies/${lobbyId}`);
+        
+        if (lobbyResponse.ok) {
+          const lobbyData = await lobbyResponse.json();
+          
+          // Check if we have matching images in the new format
+          if (lobbyData.customMatchingImages) {
+            try {
+              const parsedImages = JSON.parse(lobbyData.customMatchingImages);
+              if (Array.isArray(parsedImages) && parsedImages.length > 0) {
+                console.log("Found matching images in lobby data:", parsedImages.length);
+                setImages(parsedImages);
+                setLoading(false);
+                return;
+              }
+            } catch (parseError) {
+              console.error("Error parsing customMatchingImages:", parseError);
+            }
+          }
+        }
+        
+        // Fallback to the old method if we don't have matching images in the new format
         const response = await fetch(`/api/game-images/${lobbyId}`);
         
         if (response.ok) {
           const data = await response.json();
+          console.log("Using legacy method, found images:", data.length);
           setImages(data);
         }
       } catch (error) {
@@ -92,26 +117,9 @@ export default function ManageMatchingImages({ lobbyId }: ManageMatchingImagesPr
   // Remove image pair
   const removeImagePair = async (index: number) => {
     const newImages = [...images];
-    const removedImage = newImages[index];
     
-    // If the image has an ID, delete it from the server
-    if (removedImage.id) {
-      try {
-        const response = await apiRequest("DELETE", `/api/game-images/${removedImage.id}`);
-        
-        if (!response.ok) {
-          throw new Error("Failed to delete image");
-        }
-      } catch (error) {
-        console.error("Error deleting image:", error);
-        toast({
-          title: translate("Error"),
-          description: translate("Failed to delete image"),
-          variant: "destructive",
-        });
-        return;
-      }
-    }
+    // Remove the image at the specified index - no server call needed
+    // We'll save all changes when the user clicks the Save button
     
     newImages.splice(index, 1);
     setImages(newImages);
@@ -160,34 +168,18 @@ export default function ManageMatchingImages({ lobbyId }: ManageMatchingImagesPr
     
     try {
       setSaving(true);
-      console.log("Saving images:", images);
+      console.log("Saving images:", images.length);
       
-      // Save each image
-      for (const image of images) {
-        if (image.id) {
-          // Update existing image
-          const response = await apiRequest("PATCH", `/api/game-images/${image.id}`, {
-            imageUrl: image.imageUrl,
-            description: image.description,
-            lobbyId
-          });
-          
-          if (!response.ok) {
-            throw new Error(`Failed to update image: ${response.statusText}`);
-          }
-        } else {
-          // Create new image
-          const response = await apiRequest("POST", "/api/game-images", {
-            imageUrl: image.imageUrl,
-            description: image.description,
-            title: `Matching image for lobby ${lobbyId}`,
-            lobbyId
-          });
-          
-          if (!response.ok) {
-            throw new Error(`Failed to create image: ${response.statusText}`);
-          }
-        }
+      // New approach: Save all images directly to the game lobby
+      const matchingImagesJson = JSON.stringify(images);
+      
+      // Update the lobby with our matching images
+      const response = await apiRequest("PATCH", `/api/lobbies/${lobbyId}`, {
+        customMatchingImages: matchingImagesJson
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Failed to update lobby with matching images: ${response.statusText}`);
       }
       
       toast({
@@ -195,11 +187,23 @@ export default function ManageMatchingImages({ lobbyId }: ManageMatchingImagesPr
         description: translate("Matching images saved successfully"),
       });
       
-      // Refresh images
-      const response = await fetch(`/api/game-images/${lobbyId}`);
-      if (response.ok) {
-        const data = await response.json();
-        setImages(data);
+      // For any existing images in the old format, clean them up - just best effort
+      try {
+        const oldImagesResponse = await fetch(`/api/game-images/${lobbyId}`);
+        if (oldImagesResponse.ok) {
+          const oldImages = await oldImagesResponse.json();
+          
+          // Delete old images if they exist
+          for (const oldImage of oldImages) {
+            if (oldImage.id) {
+              await apiRequest("DELETE", `/api/game-images/${oldImage.id}`);
+            }
+          }
+          console.log("Cleaned up old format images");
+        }
+      } catch (cleanupError) {
+        // Non-fatal, just log it
+        console.warn("Error cleaning up old format images:", cleanupError);
       }
       
     } catch (error) {

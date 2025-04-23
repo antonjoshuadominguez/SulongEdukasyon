@@ -107,18 +107,34 @@ export default function PictureMatching({ lobbyId, images }: PictureMatchingProp
   const [currentFact, setCurrentFact] = useState<string | null>(null);
   const [matchedPair, setMatchedPair] = useState<{imageUrl: string, description: string} | null>(null);
   
-  // Debug logging for images prop
+  // Use customMatchingImages if available, otherwise use images prop
+  const [gameImages, setGameImages] = useState<any[]>([]);
+  
   useEffect(() => {
-    console.log(`PictureMatching: received ${images?.length || 0} images for lobby ${lobbyId}`);
+    // Check if we have customMatchingImages from the window object (set by game-page.tsx)
+    const customImages = (window as any).customMatchingImages;
+    
+    if (customImages) {
+      try {
+        // Parse the JSON string from customMatchingImages
+        const parsedImages = JSON.parse(customImages);
+        if (Array.isArray(parsedImages) && parsedImages.length > 0) {
+          console.log(`Using ${parsedImages.length} images from customMatchingImages`);
+          setGameImages(parsedImages);
+          return;
+        }
+      } catch (error) {
+        console.error("Error parsing customMatchingImages:", error);
+      }
+    }
+    
+    // Fallback to the legacy images array if customMatchingImages is not available or parsing failed
     if (images && images.length > 0) {
-      console.log('First image sample:', {
-        id: images[0].id,
-        title: images[0].title,
-        hasImageUrl: !!images[0].imageUrl,
-        descriptionLength: images[0].description?.length || 0
-      });
+      console.log(`Using ${images.length} images from legacy images prop`);
+      setGameImages(images);
     } else {
-      console.warn('No images received for picture matching game!');
+      console.warn('No images available for picture matching game!');
+      setGameImages([]);
     }
   }, [images, lobbyId]);
   
@@ -134,7 +150,7 @@ export default function PictureMatching({ lobbyId, images }: PictureMatchingProp
     isSubmitting,
     hasSubmitted,
     leaderboard
-  } = usePictureMatching(lobbyId, images);
+  } = usePictureMatching(lobbyId, gameImages);
 
   // Start timer
   useEffect(() => {

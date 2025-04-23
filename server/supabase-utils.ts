@@ -62,12 +62,9 @@ export async function uploadImageToSupabase(base64Image: string, folder: string 
       console.warn('Supabase storage upload error, using fallback URL:', supabaseError);
     }
     
-    // If we reach here, upload to Supabase failed - use a fallback public URL
-    // Return a placeholder image URL for development/testing
-    const fallbackUrl = `https://picsum.photos/seed/${uniqueId}/800/600`;
-    console.log('Using fallback image URL:', fallbackUrl);
-    
-    return { url: fallbackUrl, error: null };
+    // If we reach here, upload to Supabase failed - return original base64 image
+    console.log('Using original base64 image as fallback');
+    return { url: base64Image, error: null };
   } catch (error) {
     console.error('Error in uploadImageToSupabase:', error);
     return { url: null, error: error instanceof Error ? error : new Error('Unknown error') };
@@ -82,8 +79,8 @@ export async function uploadImageToSupabase(base64Image: string, folder: string 
  */
 export async function deleteFileFromSupabase(fileUrl: string): Promise<{success: boolean, error: Error|null}> {
   try {
-    // If it's a fallback URL, nothing to delete
-    if (fileUrl.includes('picsum.photos')) {
+    // If it's a base64 image or another non-Supabase URL, nothing to delete
+    if (fileUrl.startsWith('data:') || !fileUrl.includes(STORAGE_BUCKET)) {
       return { success: true, error: null };
     }
     

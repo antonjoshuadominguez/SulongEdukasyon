@@ -12,9 +12,11 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/hooks/use-language";
 
 // Import team member images
-import loafImage from "@assets/loaf.jpg";
+import adrianImage from "@assets/adrian.jpg";
 import mjImage from "@assets/mj.jpg";
 import ivanImage from "@assets/ivan.jpg";
+import luckyImage from "@assets/lucky.jpg";
+import antonImage from "@assets/anton.jpg";
 
 // Simple landing page layout
 const LandingLayout = ({ children }: { children: ReactNode }) => {
@@ -115,32 +117,32 @@ export default function LandingPage() {
   const teamMembers = [
     {
       name: "Lucky Acasio",
-      position: "Developer",
-      description: "A developer of SulongEdukasyon, responsible for building the backend system and database architecture. Has 5 years of experience in web development, specializing in educational technology.",
-      image: "loaf.jpg"
+      position: "Full-Stack Developer",
+      description: "An IT undergraduate student who contributed to both frontend and backend development of SulongEdukasyon. Lucky balanced his university coursework with the coding of this project, bringing creative solutions to technical challenges.",
+      image: "lucky.jpg"
     },
     {
       name: "MJ Arnigo",
-      position: "Developer",
-      description: "A developer of SulongEdukasyon, working to ensure the platform is user-friendly for elementary students. Specializes in frontend development and creating interactive user experiences.",
+      position: "Full-Stack Developer",
+      description: "A graduating IT student who worked on multiple aspects of SulongEdukasyon while completing his final year courses. MJ implemented several game features and ensured proper integration between different system components.",
       image: "mj.jpg"
     },
     {
       name: "Adrian De Leon",
-      position: "Developer",
-      description: "A developer who collaborated with teachers to align SulongEdukasyon content with the K-12 curriculum. Focuses on system architecture and database design.",
-      image: "loaf.jpg"
+      position: "Full-Stack Developer",
+      description: "A graduating IT student who managed database design and API development while balancing university studies. Adrian's comprehensive approach to full-stack development was instrumental in creating a cohesive educational platform.",
+      image: "adrian.jpg"
     },
     {
       name: "Anton Dominguez",
-      position: "Developer",
-      description: "A developer who designed and developed the educational games on the platform. Has a background in game development, giving him a unique perspective on creating engaging educational games.",
-      image: "loaf.jpg"
+      position: "Full-Stack Developer",
+      description: "An IT undergraduate student who handled game mechanics implementation and data processing. Anton juggled university coursework with development responsibilities, focusing on creating engaging educational interactions.",
+      image: "anton.jpg"
     },
     {
       name: "Ivan Fortich",
-      position: "Developer",
-      description: "A developer who manages technical implementation of SulongEdukasyon. His expertise in web technologies helped make the project successful from concept to deployment.",
+      position: "Full-Stack Developer",
+      description: "A graduating IT student who led the UI/UX design of SulongEdukasyon. Ivan created the user interface components and visual design while balancing his final year university studies with the project development.",
       image: "ivan.jpg"
     }
   ];
@@ -264,8 +266,14 @@ export default function LandingPage() {
                     {member.image === "ivan.jpg" && (
                       <img src={ivanImage} alt={member.name} className="w-full h-full object-cover" />
                     )}
-                    {member.image === "loaf.jpg" && (
-                      <img src={loafImage} alt={member.name} className="w-full h-full object-cover" />
+                    {member.image === "adrian.jpg" && (
+                      <img src={adrianImage} alt={member.name} className="w-full h-full object-cover" />
+                    )}
+                    {member.image === "lucky.jpg" && (
+                      <img src={luckyImage} alt={member.name} className="w-full h-full object-cover" />
+                    )}
+                    {member.image === "anton.jpg" && (
+                      <img src={antonImage} alt={member.name} className="w-full h-full object-cover" />
                     )}
                   </div>
                 </div>
@@ -285,7 +293,7 @@ export default function LandingPage() {
             <div className="bg-gray-50 p-6 rounded-lg max-w-3xl mx-auto">
               <h3 className="text-xl font-bold text-gray-900 mb-4">About Our Team</h3>
               <p className="text-gray-600">
-                We are the team behind SulongEdukasyon, a group of dedicated developers who came together to create a platform that provides an interactive and engaging way of learning Araling Panlipunan for Grade 6 students. Our team focused on building an educational platform that makes learning more fun and meaningful through gamification.
+                We are a group of passionate IT students who created SulongEdukasyon as part of our academic project. Our team includes both undergraduate and graduating students who balanced university studies with the development of this platform. Together, we combined our classroom knowledge with practical development skills to build this interactive learning platform for Grade 6 Araling Panlipunan students, making education more engaging through gamification.
               </p>
             </div>
           ) : (

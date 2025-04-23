@@ -392,6 +392,56 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Update lobby custom fields (including customMatchingImages)
+  app.patch("/api/lobbies/:id", isTeacher, async (req, res) => {
+    try {
+      const lobbyId = parseInt(req.params.id);
+      const teacher = req.user!;
+      
+      // Check if lobby exists and belongs to this teacher
+      const lobby = await storage.getGameLobbyById(lobbyId);
+      if (!lobby) {
+        return res.status(404).json({ message: "Lobby not found" });
+      }
+      
+      if (lobby.teacherId !== teacher.id) {
+        return res.status(403).json({ message: "You don't have permission to update this lobby" });
+      }
+      
+      // Allow updating custom fields only
+      const updateSchema = z.object({
+        customMatchingImages: z.string().optional(),
+        customImageUrl: z.string().optional(),
+        customImageDescription: z.string().optional(),
+        customQuestions: z.string().optional(),
+        customExplainImageUrl: z.string().optional(),
+        customExplainQuestions: z.string().optional(),
+        customEvents: z.string().optional(),
+        customSentences: z.string().optional(),
+        customCategories: z.string().optional(),
+        customItems: z.string().optional(),
+      });
+      
+      // Convert the request body to validate it
+      const validatedData = updateSchema.parse(req.body);
+      
+      // Update the lobby with custom fields
+      const updatedLobby = await storage.updateGameLobby(lobbyId, validatedData);
+      if (!updatedLobby) {
+        return res.status(500).json({ message: "Failed to update lobby" });
+      }
+      
+      res.json(updatedLobby);
+    } catch (error) {
+      console.error("Error updating lobby custom fields:", error);
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ message: "Invalid custom field data", errors: error.errors });
+      } else {
+        res.status(500).json({ message: "Failed to update lobby custom fields" });
+      }
+    }
+  });
+  
   // Update lobby status
   app.put("/api/teacher/lobbies/:id/status", isTeacher, async (req, res) => {
     try {

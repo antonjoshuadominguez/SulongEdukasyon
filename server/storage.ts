@@ -607,19 +607,29 @@ export class DatabaseStorage implements IStorage {
   async deleteGameLobby(id: number): Promise<boolean> {
     const db = getDb();
     
-    // Delete scores
-    await db.delete(gameScores)
-      .where(eq(gameScores.lobbyId, id));
-    
-    // Delete participants
-    await db.delete(lobbyParticipants)
-      .where(eq(lobbyParticipants.lobbyId, id));
-    
-    // Finally, delete the lobby
-    const result = await db.delete(gameLobbies)
-      .where(eq(gameLobbies.id, id));
-    
-    return result.rowCount !== null && result.rowCount > 0;
+    try {
+      // Delete scores
+      await db.delete(gameScores)
+        .where(eq(gameScores.lobbyId, id));
+      
+      // Delete participants
+      await db.delete(lobbyParticipants)
+        .where(eq(lobbyParticipants.lobbyId, id));
+      
+      // Delete associated game images (for picture matching game)
+      console.log(`Deleting associated game images for lobby ${id}...`);
+      await db.delete(gameImages)
+        .where(eq(gameImages.lobbyId, id));
+      
+      // Finally, delete the lobby
+      const result = await db.delete(gameLobbies)
+        .where(eq(gameLobbies.id, id));
+      
+      return result.rowCount !== null && result.rowCount > 0;
+    } catch (error) {
+      console.error(`Error deleting lobby ${id}:`, error);
+      throw error;
+    }
   }
 
   async addParticipantToLobby(participant: InsertLobbyParticipant): Promise<LobbyParticipant> {

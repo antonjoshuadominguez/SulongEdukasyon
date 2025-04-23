@@ -41,7 +41,7 @@ export default function GamePage() {
     customExplainQuestions?: string; // Custom questions for explain image
     customEvents?: string; // Custom timeline events
     customSentences?: string; // Custom fill-in-the-blank sentences
-
+    customMatchingImages?: string; // For picture matching (JSON array of image objects)
     customCategories?: string; // Custom categories for Tama ang Ayos
     customItems?: string; // Custom items for Tama ang Ayos
   }
@@ -118,7 +118,7 @@ export default function GamePage() {
     }
     
     // Only require images for picture_matching game
-    if (lobby.gameType === 'picture_matching' && !images) {
+    if (lobby.gameType === 'picture_matching' && !images && !lobby.customMatchingImages) {
       return (
         <div className="flex justify-center items-center h-[50vh]">
           <Loader2 className="h-10 w-10 animate-spin text-primary" />
@@ -168,6 +168,11 @@ export default function GamePage() {
     if (lobby.gameType === 'tama_ang_ayos') {
       (window as any).customCategories = lobby.customCategories || null;
       (window as any).customItems = lobby.customItems || null;
+    }
+    
+    // For Picture Matching
+    if (lobby.gameType === 'picture_matching') {
+      (window as any).customMatchingImages = lobby.customMatchingImages || null;
     }
 
     switch (lobby.gameType) {
