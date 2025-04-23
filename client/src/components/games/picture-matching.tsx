@@ -79,7 +79,9 @@ function MemoryCard({ id, imageUrl, isFlipped, isMatched, onClick }: CardProps) 
               backgroundSize: 'cover',
               backgroundPosition: 'center'
             }}
-          />
+          >
+            {!imageUrl && <div className="flex items-center justify-center h-full bg-red-100">Image Error</div>}
+          </div>
           
           {/* Matched overlay */}
           {isMatched && (
@@ -104,6 +106,21 @@ export default function PictureMatching({ lobbyId, images }: PictureMatchingProp
   const [elapsedTime, setElapsedTime] = useState(0);
   const [currentFact, setCurrentFact] = useState<string | null>(null);
   const [matchedPair, setMatchedPair] = useState<{imageUrl: string, description: string} | null>(null);
+  
+  // Debug logging for images prop
+  useEffect(() => {
+    console.log(`PictureMatching: received ${images?.length || 0} images for lobby ${lobbyId}`);
+    if (images && images.length > 0) {
+      console.log('First image sample:', {
+        id: images[0].id,
+        title: images[0].title,
+        hasImageUrl: !!images[0].imageUrl,
+        descriptionLength: images[0].description?.length || 0
+      });
+    } else {
+      console.warn('No images received for picture matching game!');
+    }
+  }, [images, lobbyId]);
   
   const {
     cards,

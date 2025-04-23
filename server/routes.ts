@@ -15,7 +15,8 @@ import { WebSocketServer, WebSocket } from 'ws';
 import { 
   insertGameLobbySchema, 
   insertLobbyParticipantSchema, 
-  insertGameScoreSchema
+  insertGameScoreSchema,
+  insertGameImageSchema
 } from "@shared/schema";
 import { nanoid } from "nanoid";
 import { uploadImageToSupabase, deleteFileFromSupabase, STORAGE_BUCKET } from "./supabase-utils";
@@ -191,13 +192,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const teacher = req.user!;
       const lobbies = await storage.getGameLobbiesByTeacher(teacher.id);
       
-      // Enhance lobbies with participant count
-      const lobbiesWithParticipants = await Promise.all(
-        lobbies.map(async (lobby) => {
-          const participantCount = await storage.getLobbyParticipantCount(lobby.id);
-          return { ...lobby, participantCount };
-        })
+      // Get all participant counts in a single operation
+      const participantCounts = await storage.getLobbyParticipantCounts(
+        lobbies.map(lobby => lobby.id)
       );
+      
+      // Combine the lobbies with their participant counts
+      const lobbiesWithParticipants = lobbies.map(lobby => ({
+        ...lobby,
+        participantCount: participantCounts[lobby.id] || 0
+      }));
       
       res.json(lobbiesWithParticipants);
     } catch (error) {
@@ -953,30 +957,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const lobbyId = parseInt(req.params.lobbyId);
       
       if (isNaN(lobbyId)) {
+        console.error("Invalid lobbyId parameter:", req.params.lobbyId);
         return res.status(400).json({ message: "Invalid lobby ID" });
       }
       
-      // Get all images with this lobby ID
-      const images = await storage.getGameImages();
-      console.log(`Found ${images.length} total images`);
+      console.log(`Fetching images for lobby ID ${lobbyId}...`);
       
-      // Filter images for this lobby - handle different formats
-      const lobbyImages = images.filter(img => {
-        // Check for "for lobby {lobbyId}" format
-        if (img.title && img.title.includes(`for lobby ${lobbyId}`)) {
-          return true;
-        }
-        
-        // Check for "Matching image for lobby {lobbyId}" format
-        if (img.title && img.title.includes(`Matching image for lobby ${lobbyId}`)) {
-          return true;
-        }
-        
-        // Also check if the request has lobbyId field (not in schema)
-        return (img as any).lobbyId === lobbyId;
-      });
+      // First get all images to debug
+      const allImages = await storage.getGameImages();
+      console.log(`Total images in database: ${allImages.length}`);
+      console.log(`Images with lobbyId ${lobbyId}:`, allImages.filter(img => img.lobbyId === lobbyId).length);
+      console.log(`Images with title pattern for lobby ${lobbyId}:`, 
+        allImages.filter(img => img.title && (img.title.includes(`lobby ${lobbyId}`))).length);
       
-      console.log(`Filtered ${lobbyImages.length} images for lobby ${lobbyId}`);
+      // Debug image URL properties
+      if (allImages.length > 0) {
+        const firstImage = allImages[0];
+        console.log('Image property inspection:');
+        console.log('- Keys:', Object.keys(firstImage));
+        console.log('- Has imageUrl:', 'imageUrl' in firstImage);
+        console.log('- Has image_url:', 'image_url' in firstImage);
+        console.log('- imageUrl value:', (firstImage as any).imageUrl);
+        console.log('- image_url value:', (firstImage as any).image_url);
+      }
+      
+      // Use the optimized method for retrieving images by lobby ID
+      const lobbyImages = await storage.getGameImagesByLobby(lobbyId);
+      
+      console.log(`Found ${lobbyImages.length} images for lobby ${lobbyId}`);
+      if (lobbyImages.length > 0) {
+        const firstImage = lobbyImages[0];
+        console.log(`First image:`, {
+          id: firstImage.id,
+          title: firstImage.title,
+          lobbyId: firstImage.lobbyId,
+          hasImageUrl: !!firstImage.imageUrl,
+          keys: Object.keys(firstImage)
+        });
+
+        // Ensure imageUrl property exists in each image object for frontend
+        const processedImages = lobbyImages.map(img => {
+          // If Drizzle returns snake_case keys, convert the image_url to imageUrl
+          if (!img.imageUrl && (img as any).image_url) {
+            return {
+              ...img,
+              imageUrl: (img as any).image_url
+            };
+          }
+          return img;
+        });
+        
+        console.log(`Returning ${processedImages.length} processed images`);
+        return res.json(processedImages);
+      }
+      
       res.json(lobbyImages);
     } catch (error) {
       console.error("Error fetching game images:", error);
@@ -995,11 +1029,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Generate a title based on lobby ID if not provided
       const title = req.body.title || `Image for lobby ${lobbyId}`;
-      
-      const newImage = await storage.addGameImage({
+
+      // Log the request data for debugging
+      console.log('Creating game image with:', {
+        hasImageUrl: !!imageUrl,
+        description: description?.substring(0, 20) + '...',
+        title,
+        lobbyId
+      });
+
+      // Validate the input data through the insert schema
+      // Note: The schema expects camelCase field names (imageUrl), but the database
+      // column is snake_case (image_url). The ORM should handle this mapping automatically.
+      const imageData = insertGameImageSchema.parse({
         imageUrl,
         description,
-        title
+        title,
+        lobbyId: parseInt(lobbyId)
+      });
+      
+      const newImage = await storage.addGameImage(imageData);
+      
+      // Log the result
+      console.log('Created new game image:', {
+        id: newImage.id,
+        hasImageUrl: !!newImage.imageUrl,
+        lobbyId: newImage.lobbyId
       });
       
       res.status(201).json(newImage);
@@ -1025,10 +1080,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Image not found" });
       }
       
+      // Make sure lobbyId is properly parsed as an integer
+      let updateData = { ...req.body };
+      if (updateData.lobbyId) {
+        updateData.lobbyId = parseInt(updateData.lobbyId);
+      }
+      
       // Update image (in memory storage only supports full replacement)
       const updatedImage = await storage.addGameImage({
         ...existingImage,
-        ...req.body
+        ...updateData
       });
       
       res.json(updatedImage);

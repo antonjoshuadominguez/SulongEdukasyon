@@ -66,7 +66,7 @@ export default function SidebarNavigation() {
                 <Link href="/dashboard">
                   <SidebarMenuButton className={isActive("/dashboard") ? "bg-primary/10 text-primary" : ""}>
                     <Home className="mr-2 h-5 w-5" />
-                    <span>{translate("dashboard")}</span>
+                    <span>{translate("Dashboard")}</span>
                   </SidebarMenuButton>
                 </Link>
               </SidebarMenuItem>

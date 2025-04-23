@@ -3,7 +3,7 @@ import { gameLobbies, users, gameScores, lobbyParticipants, gameImages,
   type LobbyParticipant, type InsertLobbyParticipant, type GameImage, type InsertGameImage } from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
-import { eq, and, desc, sql, inArray, asc, like, isNotNull } from "drizzle-orm";
+import { eq, and, desc, sql, inArray, asc, like, isNotNull, or } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { getDb, pool, supabase } from "./db";
 import connectPgSimple from 'connect-pg-simple';
@@ -34,6 +34,7 @@ export interface IStorage {
   addParticipantToLobby(participant: InsertLobbyParticipant): Promise<LobbyParticipant>;
   getLobbyParticipants(lobbyId: number): Promise<LobbyParticipant[]>;
   getLobbyParticipantCount(lobbyId: number): Promise<number>;
+  getLobbyParticipantCounts(lobbyIds: number[]): Promise<Record<number, number>>;
   getStudentActiveLobbies(userId: number): Promise<GameLobby[]>;
   removeParticipantFromLobby(participantId: number): Promise<boolean>;
   getLobbyParticipant(lobbyId: number, userId: number): Promise<LobbyParticipant | undefined>;
@@ -49,6 +50,7 @@ export interface IStorage {
   
   // Game images methods
   getGameImages(): Promise<GameImage[]>;
+  getGameImagesByLobby(lobbyId: number): Promise<GameImage[]>;
   addGameImage(image: InsertGameImage): Promise<GameImage>;
 
   // Session store
@@ -282,6 +284,25 @@ export class MemStorage implements IStorage {
       .filter(participant => participant.lobbyId === lobbyId)
       .length;
   }
+  
+  async getLobbyParticipantCounts(lobbyIds: number[]): Promise<Record<number, number>> {
+    const counts: Record<number, number> = {};
+    
+    // Initialize counts with zeros
+    for (const lobbyId of lobbyIds) {
+      counts[lobbyId] = 0;
+    }
+    
+    // Count participants for each lobby in a single loop through all participants
+    const participants = Array.from(this.lobbyParticipants.values());
+    for (const participant of participants) {
+      if (lobbyIds.includes(participant.lobbyId)) {
+        counts[participant.lobbyId] = (counts[participant.lobbyId] || 0) + 1;
+      }
+    }
+    
+    return counts;
+  }
 
   async getStudentActiveLobbies(userId: number): Promise<GameLobby[]> {
     // Get all lobbies where the student is a participant
@@ -406,6 +427,33 @@ export class MemStorage implements IStorage {
 
   async getGameImages(): Promise<GameImage[]> {
     return Array.from(this.gameImages.values());
+  }
+
+  async getGameImagesByLobby(lobbyId: number): Promise<GameImage[]> {
+    // First try to filter by lobbyId field (new schema)
+    let images = Array.from(this.gameImages.values())
+      .filter(img => (img as any).lobbyId === lobbyId);
+    
+    // If no images found with the lobbyId field (backward compatibility)
+    if (images.length === 0) {
+      // Fallback to filtering by title pattern
+      images = Array.from(this.gameImages.values())
+        .filter(img => {
+          // Check for "for lobby {lobbyId}" format
+          if (img.title && img.title.includes(`for lobby ${lobbyId}`)) {
+            return true;
+          }
+          
+          // Check for "Matching image for lobby {lobbyId}" format
+          if (img.title && img.title.includes(`Matching image for lobby ${lobbyId}`)) {
+            return true;
+          }
+          
+          return false;
+        });
+    }
+    
+    return images;
   }
 
   async addGameImage(image: InsertGameImage): Promise<GameImage> {
@@ -618,6 +666,36 @@ export class DatabaseStorage implements IStorage {
     }
     return 0;
   }
+  
+  async getLobbyParticipantCounts(lobbyIds: number[]): Promise<Record<number, number>> {
+    if (lobbyIds.length === 0) return {};
+    
+    const db = getDb();
+    const counts: Record<number, number> = {};
+    
+    // Initialize all requested lobby IDs with 0 count
+    for (const id of lobbyIds) {
+      counts[id] = 0;
+    }
+    
+    // Execute a single optimized SQL query that groups by lobby ID and counts
+    const result = await db.select({
+        lobbyId: lobbyParticipants.lobbyId,
+        count: sql`count(*)`
+      })
+      .from(lobbyParticipants)
+      .where(inArray(lobbyParticipants.lobbyId, lobbyIds))
+      .groupBy(lobbyParticipants.lobbyId);
+    
+    // Update the counts from query results
+    for (const row of result) {
+      if (row.lobbyId !== undefined && row.count !== undefined) {
+        counts[row.lobbyId] = parseInt(String(row.count));
+      }
+    }
+    
+    return counts;
+  }
 
   async getStudentActiveLobbies(userId: number): Promise<GameLobby[]> {
     const db = getDb();
@@ -801,8 +879,40 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(gameImages);
   }
 
+  async getGameImagesByLobby(lobbyId: number): Promise<GameImage[]> {
+    const db = getDb();
+    
+    // First try to get images directly by lobbyId
+    const directImages = await db.select()
+      .from(gameImages)
+      .where(eq(gameImages.lobbyId, lobbyId));
+    
+    // If we found images directly, return them
+    if (directImages.length > 0) {
+      return directImages;
+    }
+    
+    // For backward compatibility, if no direct images found, search by title pattern
+    return await db.select()
+      .from(gameImages)
+      .where(
+        or(
+          sql`${gameImages.title} LIKE ${'%for lobby ' + lobbyId + '%'}`,
+          sql`${gameImages.title} LIKE ${'%Matching image for lobby ' + lobbyId + '%'}`
+        )
+      );
+  }
+
   async addGameImage(image: InsertGameImage): Promise<GameImage> {
     const db = getDb();
+    
+    // Log the image data for debugging
+    console.log('Adding game image:', { 
+      id: image.id, 
+      hasImageUrl: !!image.imageUrl,
+      title: image.title,
+      lobbyId: image.lobbyId
+    });
     
     // If the image URL is a base64 data URL, upload it to Supabase Storage using our utility
     if (image.imageUrl && image.imageUrl.startsWith('data:image')) {
@@ -823,6 +933,8 @@ export class DatabaseStorage implements IStorage {
     }
     
     // Save the image metadata to the database
+    // Note: The Drizzle ORM should handle the mapping between imageUrl in JavaScript 
+    // and image_url in the database automatically based on the schema
     const [newImage] = await db.insert(gameImages)
       .values(image)
       .returning();

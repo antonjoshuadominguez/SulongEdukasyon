@@ -84,6 +84,7 @@ export const gameImages = pgTable("game_images", {
   title: text("title").notNull(),
   imageUrl: text("image_url").notNull(),
   description: text("description").notNull(), // Historical fact about the image
+  lobbyId: integer("lobby_id"),  // Optional reference to a game lobby
 });
 
 // Schemas for data insertion
@@ -133,6 +134,7 @@ export const insertGameImageSchema = createInsertSchema(gameImages).pick({
   title: true,
   imageUrl: true,
   description: true,
+  lobbyId: true,
 });
 
 // Types
@@ -162,6 +164,7 @@ export const gameLobbiesRelations = relations(gameLobbies, ({ one, many }) => ({
   teacher: one(users, { fields: [gameLobbies.teacherId], references: [users.id] }),
   participants: many(lobbyParticipants),
   scores: many(gameScores),
+  images: many(gameImages),
 }));
 
 export const lobbyParticipantsRelations = relations(lobbyParticipants, ({ one }) => ({
@@ -172,4 +175,8 @@ export const lobbyParticipantsRelations = relations(lobbyParticipants, ({ one })
 export const gameScoresRelations = relations(gameScores, ({ one }) => ({
   lobby: one(gameLobbies, { fields: [gameScores.lobbyId], references: [gameLobbies.id] }),
   user: one(users, { fields: [gameScores.userId], references: [users.id] }),
+}));
+
+export const gameImagesRelations = relations(gameImages, ({ one }) => ({
+  lobby: one(gameLobbies, { fields: [gameImages.lobbyId], references: [gameLobbies.id] }),
 }));

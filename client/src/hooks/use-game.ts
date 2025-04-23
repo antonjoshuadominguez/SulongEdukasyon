@@ -143,25 +143,58 @@ export function usePictureMatching(lobbyId: number, images: any[]) {
 
   // Initialize game
   useEffect(() => {
-    if (!images || images.length === 0) return;
+    console.log('usePictureMatching: initializing with', images?.length, 'images');
+    
+    if (!images || images.length === 0) {
+      console.warn('No images available for picture matching game!');
+      return;
+    }
+    
+    // Debug each image to check for problems
+    images.forEach((image, idx) => {
+      if (!image.imageUrl && !image.image_url) {
+        console.error(`Image ${idx} (id:${image.id}) missing both imageUrl and image_url properties!`);
+      }
+      if (!image.description) {
+        console.warn(`Image ${idx} (id:${image.id}) missing description!`);
+      }
+    });
     
     // Create pairs of cards
-    const cardPairs = images.flatMap((image, index) => [
-      {
-        id: index * 2,
-        imageId: image.id,
-        imageUrl: image.imageUrl,
-        matched: false,
-        description: image.description
-      },
-      {
-        id: index * 2 + 1,
-        imageId: image.id,
-        imageUrl: image.imageUrl,
-        matched: false,
-        description: image.description
+    const cardPairs = images.flatMap((image, index) => {
+      // Try both imageUrl (camelCase) and image_url (snake_case) to handle both naming conventions
+      const imageSource = image.imageUrl || image.image_url;
+      
+      // Skip images with missing image URL
+      if (!imageSource) {
+        console.warn(`Skipping image ${image.id} due to missing image URL`);
+        return [];
       }
-    ]);
+      
+      return [
+        {
+          id: index * 2,
+          imageId: image.id,
+          imageUrl: imageSource,
+          matched: false,
+          description: image.description || 'No description available'
+        },
+        {
+          id: index * 2 + 1,
+          imageId: image.id,
+          imageUrl: imageSource,
+          matched: false,
+          description: image.description || 'No description available'
+        }
+      ];
+    });
+    
+    if (cardPairs.length === 0) {
+      console.error('No valid card pairs could be created - all images may be missing imageUrl');
+      return;
+    }
+    
+    console.log(`Created ${cardPairs.length} cards (${cardPairs.length/2} pairs) from ${images.length} images`);
     
     // For a 4x3 grid, we need 12 cards (6 pairs)
     // If we have more, slice to 12
@@ -173,6 +206,8 @@ export function usePictureMatching(lobbyId: number, images: any[]) {
     
     // Shuffle cards
     const shuffled = [...processedCards].sort(() => Math.random() - 0.5);
+    
+    console.log(`Final cards for game: ${shuffled.length}`);
     
     setCards(shuffled);
     setFlipped([]);
