@@ -7,7 +7,6 @@ import GamePage from "@/pages/game-page";
 import ClassPage from "@/pages/class-page";
 import StatsPage from "@/pages/stats-page";
 import HelpPage from "@/pages/help-page";
-import TestPuzzlePage from "@/pages/test-puzzle-page";
 import LandingPage from "@/pages/landing-page";
 import StudentLeaderboardPage from "@/pages/student-leaderboard-page";
 import { ProtectedRoute } from "./lib/protected-route";
